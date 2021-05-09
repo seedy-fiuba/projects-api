@@ -2,6 +2,17 @@
 
 const express = require('express');
 
+// DB postgre config
+const { Client } = require('pg');
+
+const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    query_timeout: 1000,
+    statement_timeout: 1000
+});
+
+client.connect();
+
 // Routers
 const indexRouter = require("./routes/index");
 const apiRouter = require('./routes/projects');
