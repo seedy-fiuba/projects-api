@@ -1,18 +1,23 @@
 'use strict';
 
 const express = require('express');
-const bodyParser = require('body-parser');
+
+// Routers
+const indexRouter = require("./routes/index");
+const apiRouter = require('./routes/projects');
 
 // Constants
 const PORT = process.env.PORT || 8080;
 // App
 const app = express();
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+// Middleware
+app.use(express.json()) // parse application/json
+app.use(express.urlencoded({extended: false})) // parse application/x-www-form-urlencoded
 
-// parse application/json
-app.use(bodyParser.json())
+//Router prefix
+app.use("/", indexRouter);
+app.use("/api/", apiRouter);
 
 function nameHandler(req, res) {
     console.log("incoming request...")
