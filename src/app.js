@@ -58,9 +58,9 @@ function nameHandler(req, res) {
     res.json(respBody);
 }
 
-app.get('/', (req, res) => {
-    res.send('Hello World');
-});
+app.get('/status', (req, res) =>
+    client.query('SELECT NOW()', (err) => res.send({ service: 'UP', db: err ? 'DOWN' : 'UP' }))
+);
 
 app.get('/full-name/:id', (req, res) => {
     console.log(req.params)

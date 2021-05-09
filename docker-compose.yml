@@ -1,9 +1,25 @@
-web:
-  container_name: projects-api
-  build: .
-  volumes:
-    - .:/app
-    - /app/node_modules
-  restart: always
-  ports:
-    - "8080:8080"
+version: '3'
+services:
+  http:
+    build: ./
+    container_name: projects-api-v2
+    environment:
+      - PORT=8080
+      - DATABASE_URL=postgres://postgres:postgres@psql-container:5432/postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - my-net
+    ports:
+      - 8080:8080
+    depends_on:
+      - psql-container
+  psql-container:
+    image: postgres
+    container_name: psql-container
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - my-net
+networks:
+  my-net:
+    driver: bridge
