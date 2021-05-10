@@ -7,6 +7,9 @@ const { Client } = require('pg');
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
+    ssl: { // This is mandatory for the connection in heroku
+        rejectUnauthorized: false
+    },
     query_timeout: 1000,
     statement_timeout: 1000
 });
