@@ -1,5 +1,6 @@
 let projectDB = require('../repository/projects');
 
+// This is used just for testing
 const setProjectDB = (repository) => {
     projectDB = repository
 }
