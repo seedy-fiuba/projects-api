@@ -38,7 +38,8 @@ const getProject = async () => {
 
 const getProjectByid = async (id) => {
     const response =  await pool.query('SELECT * FROM projects WHERE id = $1', [id]);
-    return response.rows
+    // ToDo chequear inexistencia
+    return response.rows[0]
 }
 
 const createProject = async (name, description) => {
