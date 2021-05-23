@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const server = require('../src/server')
 let request = supertest(server.app)
-let projectController = require('../src/controllers/projects.controller')
+let projectController = require('../src/controller/projects.controller')
 
 let projectMockRepository = {
     getProject: jest.fn(),

@@ -1,5 +1,5 @@
 const { Pool } = require('pg')
-const projectRepository = require('./projects')
+const projectRepository = require('./contracts')
 
 jest.mock('pg', () => {
     const mockPool = {

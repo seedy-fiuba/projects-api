@@ -1,6 +1,7 @@
 'use strict';
-
+require('dotenv').config()
 const express = require('express');
+const mongoose = require('mongoose')
 
 // DB postgre config
 const { Client } = require('pg');
@@ -29,8 +30,19 @@ app.use(express.urlencoded({extended: false})) // parse application/x-www-form-u
 app.use("/", indexRouter);
 app.use("/api/", apiRouter);
 
+// DB connection
+let MONGODB_URL = process.env.MONGODB_URL;
+mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+    console.log('MongoDB: Connected to %s', MONGODB_URL);
+}).catch(err => {
+    console.error('MongoDB connect error:', err.message);
+    process.exit(1);
+});
+
 app.get('/status', (req, res) =>
-    client.query('SELECT NOW()', (err) => res.send({ service: 'UP', db: err ? 'DOWN' : 'UP' }))
+    client.query('SELECT NOW()', (err) => res.send({
+        service: 'UP',
+        dbHeroku: err ? 'DOWN' : 'UP'}))
 );
 
 module.exports = {

@@ -21,7 +21,7 @@ const createProject = async (req, res) => {
     let project = await projectDB.createProject(name,description);
     res.status(200).json({
         message: "project added successfully",
-        project: project
+        project
     })
 }
 
