@@ -1,7 +1,8 @@
 let Project = require('../model/projects')
 
 const getProject = async () => {
-    throw new Error("implement me")
+    let results = await Project.find({})
+    return results
 }
 
 const getProjectByid = async (id) => {
@@ -16,8 +17,8 @@ const createProject = async (name, description) => {
 }
 
 const updateProject = async (id, name, description) => {
-    throw new Error("implement me")
-    // return await pool.query('UPDATE projects SET name = $1, description = $2 WHERE id = $3', [name, description, id])
+    let result = await Project.findByIdAndUpdate(id, {description: description}, {new: true})
+    return result
 }
 
 module.exports = {
