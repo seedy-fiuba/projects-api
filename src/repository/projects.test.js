@@ -35,8 +35,6 @@ describe('get project by id', () => {
 		};
 
 		const finderMock = query => {
-			expect(query.getQuery()).toMatchSnapshot('findById query');
-
 			if (query.getQuery()._id === '456') {
 				return projectDoc;
 			}
