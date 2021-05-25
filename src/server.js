@@ -34,13 +34,15 @@ app.use("/", indexRouter);
 app.use("/api/", apiRouter);
 
 // DB connection
-let MONGODB_URL = process.env.MONGODB_URL;
-mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-    console.log('MongoDB: Connected to %s', MONGODB_URL);
-}).catch(err => {
-    console.error('MongoDB connect error:', err.message);
-    process.exit(1);
-});
+const connectMongoDB = () => {
+    let MONGODB_URL = process.env.MONGODB_URL;
+    mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+        console.log('MongoDB: Connected to %s', MONGODB_URL);
+    }).catch(err => {
+        console.error('MongoDB connect error:', err.message);
+        process.exit(1);
+    });
+}
 
 app.get('/status', (req, res) =>
     client.query('SELECT NOW()', (err) => res.send({
@@ -73,5 +75,6 @@ app.use((err, req, res, next) => {
 
 module.exports = {
     app: app,
-    client: client
+    client: client,
+    connectMongoDB
 };
