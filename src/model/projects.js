@@ -9,6 +9,8 @@ let projectSchema = new Schema({
 	description: { type: String, required: true}
 }, { timestamps: true, _id: false  }); // timestamps adds "createdAt" and "updatedAt" fields
 
-projectSchema.plugin(AutoIncrement);
+if (process.env.SCOPE === 'PROD') {
+	projectSchema.plugin(AutoIncrement);
+}
 
 module.exports = mongoose.model('Project', projectSchema);
