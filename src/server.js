@@ -53,7 +53,7 @@ app.get('/status', (req, res) =>
 // Express error handler
 app.use((err, req, res, next) => {
 	if (err) {
-		console.error(err.stack);
+		console.log(err.stack);
 
 		if (err.name === constants.error.UNAUTHORIZED_ERROR) {
 			return apiResponse.unauthorizedResponse(res, err.message);
