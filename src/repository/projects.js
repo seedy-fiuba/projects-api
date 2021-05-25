@@ -30,9 +30,12 @@ const createProject = async (data) => {
 	return savedProject;
 };
 
-const updateProject = async (id, name, description) => {
-	let result = await Project.findByIdAndUpdate(id, {description: description}, {new: true});
-	return result;
+const updateProject = async (id, name, newValues) => {
+	let updatedProject = await Project.findByIdAndUpdate(id, newValues, {new: true});
+
+	console.log('project updated successfully\n' + updatedProject)
+
+	return updatedProject;
 };
 
 module.exports = {
