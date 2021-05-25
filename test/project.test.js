@@ -22,16 +22,44 @@ describe('POST /api/project', () => {
 	});
 
 	test('should create a new project', async () => {
-		let body = {name: 'proyecto1', description: 'proyecto  re copado'};
+		let body = {
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			location: {
+				x: -34.610955,
+				y: -58.436967
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
+		};
+
+		let doc = {
+			_id: 123,
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: "Point"
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
+		};
+		projectMockRepository.createProject.mockReturnValueOnce(doc)
 
 		const res = await request.post('/api/project').send(body);
 
-
 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1);
-		expect(projectMockRepository.createProject.mock.calls[0][0]).toBe(body.name);
-		expect(projectMockRepository.createProject.mock.calls[0][1]).toBe(body.description);
+		expect(projectMockRepository.createProject.mock.calls[0][0]).toMatchObject(body);
 		expect(res.status).toBe(200);
-		expect(res.body.message).toBe('project added successfully');
+		expect(res.body).toMatchObject(doc);
 	});
 });
 
@@ -66,37 +94,68 @@ describe('GET /api/project', () => {
 	});
 
 	test('update project id 456', async () => {
+		let body = {
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			location: {
+				x: -34.610955,
+				y: -58.436967
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
+		};
 
 		let projectUpdated = {
-			name: 'producto1',
-			description: 'que te importa'
+			_id: 123,
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: "Point"
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
 		};
 
 		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
 
-		const res = await request.put('/api/project/456').send(projectUpdated);
-
+		const res = await request.put('/api/project/456').send(body);
 
 		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
-		expect(projectMockRepository.updateProject.mock.calls[0][1]).toBe(projectUpdated.name);
-		expect(projectMockRepository.updateProject.mock.calls[0][2]).toBe(projectUpdated.description);
+		expect(projectMockRepository.updateProject.mock.calls[0][1]).toMatchObject(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(projectUpdated);
 	});
 
 	test('update project id 456 fails due to db unavailable', async () => {
 
-		let projectUpdated = {
-			name: 'producto1',
-			description: 'que te importa'
+		let body = {
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			location: {
+				x: -34.610955,
+				y: -58.436967
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
 		};
 
 		projectMockRepository.updateProject.mockImplementationOnce(() => {
 			throw new Error('database unavailable');
 		});
 
-		const res = await request.put('/api/project/456').send(projectUpdated);
+		const res = await request.put('/api/project/456').send(body);
 
 		expect(res.status).toBe(500);
 		expect(res.text).toContain('database unavailable');

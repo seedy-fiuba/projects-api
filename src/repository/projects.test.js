@@ -16,22 +16,46 @@ describe('get project by id', () => {
 	test('should return project for id 123', async () => {
 		let projectDoc = {
 			_id: 123,
-			name: 'boquita',
-			description: 'dale bokeee'
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: "Point"
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
 		};
 
 		mockingoose(projectModel).toReturn(projectDoc, 'findOne');
 
-		const projectResult = await projectRepository.getProjectByid('123');
+		const doc = await projectRepository.getProjectByid('123');
 
-		expect(projectResult).toMatchObject(projectDoc);
+		expect(JSON.parse(JSON.stringify(doc))).toMatchObject(projectDoc);
 	});
 
 	test('should return project for id 456 with query spy', async () => {
 		let projectDoc = {
 			_id: 456,
-			name: 'boquita',
-			description: 'dale bokeee'
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: "Point"
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
 		};
 
 		const finderMock = query => {
@@ -44,7 +68,7 @@ describe('get project by id', () => {
 
 		const projectResult = await projectRepository.getProjectByid('456');
 
-		expect(projectResult).toMatchObject(projectDoc);
+		expect(JSON.parse(JSON.stringify(projectResult))).toMatchObject(projectDoc);
 	});
 });
 
@@ -63,14 +87,39 @@ describe('POST project', () => {
 	test('should create project id 123', async () => {
 		let projectDoc = {
 			_id: 123,
-			name: 'boquita',
-			description: 'dale bokeee'
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: "Point"
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
 		};
+
+		let body = {
+			title: "pad gamer",
+			description: "teclado gamer rgb con muchas luces",
+			category: "gamer",
+			mediaUrls: ["foto/fachera"],
+			targetAmount: 123.22,
+			location: {
+				x: -34.610955,
+				y: -58.436967
+			},
+			hashtags: ["gamer", "rgb", "mecanico"]
+		}
 
 		mockingoose(projectModel).toReturn(projectDoc, 'save');
 
-		const projectResult = await projectRepository.createProject('boquita', 'dale bokeee');
+		const projectResult = await projectRepository.createProject(body);
 
-		expect(projectResult).toMatchObject(projectDoc);
+		expect(JSON.parse(JSON.stringify(projectResult))).toMatchObject(projectDoc);
 	});
 });
