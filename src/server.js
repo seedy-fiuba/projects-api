@@ -2,6 +2,9 @@
 require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose')
+const apiResponse = require('./utils/responses');
+const constants = require('./utils/constants');
+require('express-async-errors') // This is for catching errors from controllers and handle them in the next(), without using the next() keyword in the controllers
 
 // DB postgre config
 const { Client } = require('pg');
@@ -44,6 +47,29 @@ app.get('/status', (req, res) =>
         service: 'UP',
         dbHeroku: err ? 'DOWN' : 'UP'}))
 );
+
+// Express error handler
+app.use((err, req, res, next) => {
+    if (err) {
+        console.error(err.stack);
+
+        if (err.name === constants.error.UNAUTHORIZED_ERROR) {
+            return apiResponse.unauthorizedResponse(res, err.message);
+        }
+        if (err.name === constants.error.BAD_REQUEST) {
+            return apiResponse.badRequest(res, err.message);
+        }
+        if (err.name === constants.error.CONFLICT_ERROR) {
+            return apiResponse.conflictError(res, err.message);
+        }
+        if (err.name === constants.error.NOT_FOUND) {
+            return apiResponse.notFoundResponse(res, err.message);
+        }
+        return apiResponse.unexpectedError(res, err.message);
+    }
+
+    next()
+});
 
 module.exports = {
     app: app,

@@ -98,13 +98,8 @@ describe('GET /api/project', () => {
 
         const res = await request.put("/api/project/456").send(projectUpdated)
 
+        expect(res.status).toBe(500)
+        expect(res.text).toContain('database unavailable')
 
-        expect(projectMockRepository.updateProject.mock.calls.length).toBe(1)
-        expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe("456")
-        expect(projectMockRepository.updateProject.mock.calls[0][1]).toBe(projectUpdated.name)
-        expect(projectMockRepository.updateProject.mock.calls[0][2]).toBe(projectUpdated.description)
-
-        expect(res.status).toBe(200)
-        expect(res.body).toStrictEqual(projectUpdated)
     })
 })

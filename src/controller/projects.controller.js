@@ -25,7 +25,7 @@ const createProject = async (req, res) => {
     })
 }
 
-const updateProject = async (req, res) => {
+const updateProject = async (req, res, next) => {
     const {name , description} = req.body
 
     const response = await projectDB.updateProject(req.params.id, name, description)
