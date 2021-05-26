@@ -30,7 +30,7 @@ const createProject = async (req, res) => {
 };
 
 const updateProject = async (req, res) => {
-	let {value, error} = validator.createProject(req.body)
+	let {value, error} = validator.updateProject(req.body)
 	if(error) {
 		error.name = constants.error.BAD_REQUEST
 		throw error
