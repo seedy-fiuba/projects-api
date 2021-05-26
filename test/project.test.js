@@ -54,7 +54,7 @@ describe('POST /api/project', () => {
 		};
 		projectMockRepository.createProject.mockReturnValueOnce(doc)
 
-		const res = await request.post('/api/project').send(body);
+		const res = await request.post('/api/project').set('X-Override-Token','true').send(body);
 
 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toMatchObject(body);
@@ -81,7 +81,7 @@ describe('GET /api/project', () => {
 			description: 'que te importa'
 		});
 
-		const res = await request.get('/api/project/123');
+		const res = await request.get('/api/project/123').set('X-Override-Token','true');
 
 
 		expect(projectMockRepository.getProjectByid.mock.calls.length).toBe(1);
@@ -99,7 +99,6 @@ describe('GET /api/project', () => {
 			description: "teclado gamer rgb con muchas luces",
 			category: "gamer",
 			mediaUrls: ["foto/fachera"],
-			targetAmount: 123.22,
 			location: {
 				x: -34.610955,
 				y: -58.436967
@@ -127,7 +126,7 @@ describe('GET /api/project', () => {
 
 		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
 
-		const res = await request.put('/api/project/456').send(body);
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
 
 		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
@@ -143,7 +142,6 @@ describe('GET /api/project', () => {
 			description: "teclado gamer rgb con muchas luces",
 			category: "gamer",
 			mediaUrls: ["foto/fachera"],
-			targetAmount: 123.22,
 			location: {
 				x: -34.610955,
 				y: -58.436967
@@ -155,7 +153,7 @@ describe('GET /api/project', () => {
 			throw new Error('database unavailable');
 		});
 
-		const res = await request.put('/api/project/456').send(body);
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
 
 		expect(res.status).toBe(500);
 		expect(res.text).toContain('database unavailable');

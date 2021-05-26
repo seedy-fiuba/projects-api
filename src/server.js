@@ -34,7 +34,8 @@ app.use(async (req, res, next) => {
 	let override = req.header('X-Override-Token')
 
 	if(override) {
-		next()
+		next();
+		return
 	}
 
 	if(!token) {
@@ -48,13 +49,9 @@ app.use(async (req, res, next) => {
 			return apiResponse.unauthorizedResponse(res, "invalid token");
 		}
 
-		console.log("entra por aca")
 		return apiResponse.internalServerError(res, result.message + result.error)
 	}
 
-	console.log(
-		"salio"
-	)
 	next()
 })
 
