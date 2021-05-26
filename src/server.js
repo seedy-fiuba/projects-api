@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
+const authentication = require('./client/authentication')
 require('express-async-errors'); // This is for catching errors from controllers and handle them in the next(), without using the next() keyword in the controllers
 
 // DB postgre config
@@ -28,6 +29,34 @@ const app = express();
 // Middleware
 app.use(express.json()); // parse application/json
 app.use(express.urlencoded({extended: false})); // parse application/x-www-form-urlencoded
+app.use(async (req, res, next) => {
+	let token = req.header('X-Auth-Token')
+	let override = req.header('X-Override-Token')
+
+	if(override) {
+		next()
+	}
+
+	if(!token) {
+		return apiResponse.unauthorizedResponse(res, "missing auth token header")
+	}
+
+	let result = await authentication.authenticateToken(token)
+
+	if (result.message !== "authorized") {
+		if (result.message === constants.error.UNAUTHORIZED_ERROR) {
+			return apiResponse.unauthorizedResponse(res, "invalid token");
+		}
+
+		console.log("entra por aca")
+		return apiResponse.internalServerError(res, result.message + result.error)
+	}
+
+	console.log(
+		"salio"
+	)
+	next()
+})
 
 //Router prefix
 app.use('/', indexRouter);

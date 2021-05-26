@@ -45,3 +45,11 @@ exports.conflictError = function (res, msg) {
 	};
 	return res.status(409).json(data);
 };
+
+exports.internalServerError = (res, msg) => {
+	let data = {
+		status: 500,
+		message: msg
+	};
+	return res.status(500).json(data);
+}
