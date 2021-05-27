@@ -30,7 +30,13 @@ const createProject = async (data) => {
 	return savedProject;
 };
 
-const updateProject = async (id, name, newValues) => {
+const updateProject = async (id, newValues) => {
+
+	newValues.location = {
+		type: 'Point',
+		coordinates: [newValues.location.x, newValues.location.y]
+	}
+
 	let updatedProject = await Project.findByIdAndUpdate(id, newValues, {new: true});
 
 	console.log('project updated successfully\n' + updatedProject)
