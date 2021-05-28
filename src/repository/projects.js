@@ -53,6 +53,25 @@ const searchProjects = async (queryValues) => {
 	if (queryValues['category']) {
 		query['category'] =  {$in: queryValues.category}
 	}
+
+	if (queryValues['hashtags']) {
+		query['hashtags'] =  {$in: queryValues.hashtags}
+	}
+
+	if (queryValues['status']) {
+		query['status'] =  queryValues.status
+	}
+
+	if (queryValues['locationX']) {
+		query['location'] =  {
+			$near: {
+				$geometry: { type: "Point",  coordinates: [ queryValues['locationX'], queryValues['locationY'] ] },
+				// $minDistance: 1000, // ToDo definir esto
+				$maxDistance: 5000 // ToDo defiinir esto
+			}
+		}
+	}
+
 	return Project.find(query);
 	// console.log(query['hashtags'])
 	// console.log(query['category'])

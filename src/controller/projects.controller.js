@@ -62,6 +62,10 @@ const searchProjects = async (req, res) => {
 		value['hashtags'] = value['hashtags'].split(',');
 	}
 
+	if((value['locationX'] && !value['locationY']) || (!value['locationX'] && value['locationY'])) {
+		return apiResponse.badRequest(res, "locationX and locationY are needed for location search")
+	}
+
 	let response = await projectDB.searchProjects(value);
 	res.status(200).json({
 		size: response.length,

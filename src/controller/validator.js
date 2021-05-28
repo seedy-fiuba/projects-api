@@ -36,12 +36,10 @@ const updateProject = (data) => {
 const searchProject = (data) => {
     const schema = Joi.object({
         // title: Joi.string().min(3).max(255),
-        // description: Joi.string().min(10).max(1024),
+        status: Joi.string().min(3).max(255), //ToDo aca solo se deberian poder buscar status discretos
         category: Joi.string().min(3).max(255),
-        location: Joi.object({
-            x: Joi.number().required(),
-            y: Joi.number().required(),
-        }),
+        locationX: Joi.number(),
+        locationY: Joi.number(),
         hashtags: Joi.string().min(3).max(255),
     });
 
