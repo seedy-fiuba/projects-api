@@ -33,7 +33,23 @@ const updateProject = (data) => {
     return schema.validate(data);
 }
 
+const searchProject = (data) => {
+    const schema = Joi.object({
+        // title: Joi.string().min(3).max(255),
+        // description: Joi.string().min(10).max(1024),
+        category: Joi.string().min(3).max(255),
+        location: Joi.object({
+            x: Joi.number().required(),
+            y: Joi.number().required(),
+        }),
+        hashtags: Joi.string().min(3).max(255),
+    });
+
+    return schema.validate(data);
+}
+
 module.exports = {
     createProject,
-    updateProject
+    updateProject,
+    searchProject
 }

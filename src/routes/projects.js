@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var { getProject, getProjectByid, createProject, updateProject }  = require('../controller/projects.controller');
+let projectController  = require('../controller/projects.controller');
 
-router.get('/project', getProject);
-router.get('/project/:id', getProjectByid);
-router.post('/project', createProject);
-router.put('/project/:id', updateProject);
+router.get('/project', projectController.getProject);
+router.get('/project/search', projectController.searchProjects);
+router.get('/project/:id', projectController.getProjectByid);
+router.post('/project', projectController.createProject);
+router.put('/project/:id', projectController.updateProject);
 
 module.exports = router;

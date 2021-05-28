@@ -1,6 +1,7 @@
 let projectDB = require('../repository/projects');
 const validator = require('./validator')
 const constants = require('../utils/constants')
+const apiResponse = require('../utils/responses')
 
 // This is used just for testing
 const setProjectDB = (repository) => {
@@ -41,10 +42,38 @@ const updateProject = async (req, res) => {
 	res.status(200).json(project);
 };
 
+const searchProjects = async (req, res) => {
+	console.log(req['query'])
+
+	// ToDo add validator, not every field is admisible for search
+	let {value, error} = validator.searchProject(req['query'])
+	if(error) {
+		error.name = constants.error.BAD_REQUEST
+		throw error
+	}
+
+	console.log(value)
+
+	if(value['category']) {
+		value['category'] = value['category'].split(',');
+	}
+
+	if(value['hashtags']) {
+		value['hashtags'] = value['hashtags'].split(',');
+	}
+
+	let response = await projectDB.searchProjects(value);
+	res.status(200).json({
+		size: response.length,
+		results: response
+	});
+};
+
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
 	updateProject,
+	searchProjects,
 	setProjectDB
 };
