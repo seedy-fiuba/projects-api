@@ -45,9 +45,6 @@ const updateProject = async (id, newValues) => {
 };
 
 const searchProjects = async (queryValues) => {
-	// location requiere tratamiento especial
-	// desglozar y armar query correspondiente
-
 	let query = {}
 
 	if (queryValues['category']) {
@@ -73,9 +70,6 @@ const searchProjects = async (queryValues) => {
 	}
 
 	return Project.find(query);
-	// console.log(query['hashtags'])
-	// console.log(query['category'])
-	// console.log('query re loca ' + query)
 };
 
 module.exports = {
