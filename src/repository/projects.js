@@ -10,22 +10,22 @@ const getProjectByid = async (id) => {
 
 const createProject = async (data) => {
 	let newProject = new Project();
-	newProject.title = data.title
-	newProject.description = data.description
-	newProject.category = data.category
-	newProject.status = 'created'
-	newProject.mediaUrls = data.mediaUrls
-	newProject.targetAmount = data.targetAmount
-	newProject.fundedAmount = 0.0
+	newProject.title = data.title;
+	newProject.description = data.description;
+	newProject.category = data.category;
+	newProject.status = 'created';
+	newProject.mediaUrls = data.mediaUrls;
+	newProject.targetAmount = data.targetAmount;
+	newProject.fundedAmount = 0.0;
 	newProject.location = {
 		type: 'Point',
 		coordinates: [data.location.x, data.location.y]
-	}
-	newProject.hashtags = data.hashtags
+	};
+	newProject.hashtags = data.hashtags;
 
 	let savedProject = await newProject.save();
 
-	console.log('project created successfully\n' + savedProject)
+	console.log('project created successfully\n' + savedProject);
 
 	return savedProject;
 };
@@ -35,38 +35,38 @@ const updateProject = async (id, newValues) => {
 	newValues.location = {
 		type: 'Point',
 		coordinates: [newValues.location.x, newValues.location.y]
-	}
+	};
 
 	let updatedProject = await Project.findByIdAndUpdate(id, newValues, {new: true});
 
-	console.log('project updated successfully\n' + updatedProject)
+	console.log('project updated successfully\n' + updatedProject);
 
 	return updatedProject;
 };
 
 const searchProjects = async (queryValues) => {
-	let query = {}
+	let query = {};
 
 	if (queryValues['category']) {
-		query['category'] =  {$in: queryValues.category}
+		query['category'] =  {$in: queryValues.category};
 	}
 
 	if (queryValues['hashtags']) {
-		query['hashtags'] =  {$in: queryValues.hashtags}
+		query['hashtags'] =  {$in: queryValues.hashtags};
 	}
 
 	if (queryValues['status']) {
-		query['status'] =  queryValues.status
+		query['status'] =  queryValues.status;
 	}
 
 	if (queryValues['locationX']) {
 		query['location'] =  {
 			$near: {
-				$geometry: { type: "Point",  coordinates: [ queryValues['locationX'], queryValues['locationY'] ] },
+				$geometry: { type: 'Point',  coordinates: [ queryValues['locationX'], queryValues['locationY'] ] },
 				// $minDistance: 1000, // ToDo definir esto
 				$maxDistance: 5000 // ToDo defiinir esto
 			}
-		}
+		};
 	}
 
 	return Project.find(query);

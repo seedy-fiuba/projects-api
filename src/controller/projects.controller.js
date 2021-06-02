@@ -1,7 +1,7 @@
 let projectDB = require('../repository/projects');
-const validator = require('./validator')
-const constants = require('../utils/constants')
-const apiResponse = require('../utils/responses')
+const validator = require('./validator');
+const constants = require('../utils/constants');
+const apiResponse = require('../utils/responses');
 
 const getProject = async (req, res) => {
 	let response = await projectDB.getProject();
@@ -14,10 +14,10 @@ const getProjectByid = async (req, res) => {
 };
 
 const createProject = async (req, res) => {
-	let {value, error} = validator.createProject(req.body)
+	let {value, error} = validator.createProject(req.body);
 	if(error) {
-		error.name = constants.error.BAD_REQUEST
-		throw error
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
 	}
 
 	let project = await projectDB.createProject(value);
@@ -26,10 +26,10 @@ const createProject = async (req, res) => {
 };
 
 const updateProject = async (req, res) => {
-	let {value, error} = validator.updateProject(req.body)
+	let {value, error} = validator.updateProject(req.body);
 	if(error) {
-		error.name = constants.error.BAD_REQUEST
-		throw error
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
 	}
 
 	const project = await projectDB.updateProject(req.params.id, value);
@@ -38,14 +38,14 @@ const updateProject = async (req, res) => {
 };
 
 const searchProjects = async (req, res) => {
-	let {value, error} = validator.searchProject(req['query'])
+	let {value, error} = validator.searchProject(req['query']);
 	if(error) {
-		error.name = constants.error.BAD_REQUEST
-		throw error
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
 	}
 
 	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'])) {
-		return apiResponse.badRequest(res, "A search criteria is required")
+		return apiResponse.badRequest(res, 'A search criteria is required');
 	}
 
 	if(value['category']) {
@@ -57,13 +57,13 @@ const searchProjects = async (req, res) => {
 	}
 
 	if((value['locationX'] && !value['locationY']) || (!value['locationX'] && value['locationY'])) {
-		return apiResponse.badRequest(res, "locationX and locationY are needed for location search")
+		return apiResponse.badRequest(res, 'locationX and locationY are needed for location search');
 	}
 
 	let response = await projectDB.searchProjects(value);
 
 	if (response.length === 0)  {
-		return apiResponse.notFoundResponse(res, "not found projects matching the criteria " + JSON.stringify(value))
+		return apiResponse.notFoundResponse(res, 'not found projects matching the criteria ' + JSON.stringify(value));
 	}
 
 	res.status(200).json({
