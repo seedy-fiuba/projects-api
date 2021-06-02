@@ -44,6 +44,10 @@ const searchProjects = async (req, res) => {
 		throw error
 	}
 
+	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'])) {
+		return apiResponse.badRequest(res, "A search criteria is required")
+	}
+
 	if(value['category']) {
 		value['category'] = value['category'].split(',');
 	}
@@ -57,6 +61,11 @@ const searchProjects = async (req, res) => {
 	}
 
 	let response = await projectDB.searchProjects(value);
+
+	if (response.length === 0)  {
+		return apiResponse.notFoundResponse(res, "not found projects matching the criteria " + JSON.stringify(value))
+	}
+
 	res.status(200).json({
 		size: response.length,
 		results: response
