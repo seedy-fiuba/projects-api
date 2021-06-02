@@ -3,11 +3,6 @@ const validator = require('./validator')
 const constants = require('../utils/constants')
 const apiResponse = require('../utils/responses')
 
-// This is used just for testing
-const setProjectDB = (repository) => {
-	projectDB = repository;
-};
-
 const getProject = async (req, res) => {
 	let response = await projectDB.getProject();
 	res.status(200).json(response);
@@ -74,5 +69,4 @@ module.exports = {
 	createProject,
 	updateProject,
 	searchProjects,
-	setProjectDB
 };

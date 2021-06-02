@@ -1,15 +1,17 @@
 const supertest = require('supertest');
 const server = require('../src/server');
 let request = supertest(server.app);
-let projectController = require('../src/controller/projects.controller');
+let projectMockRepository = require('../src/repository/projects');
 
-let projectMockRepository = {
-	getProject: jest.fn(),
-	getProjectByid: jest.fn(),
-	createProject: jest.fn(),
-	updateProject: jest.fn()
-};
-projectController.setProjectDB(projectMockRepository); // Mock repository interaction
+jest.mock('../src/repository/projects', () => {
+	return {
+		getProject: jest.fn(),
+		getProjectByid: jest.fn(),
+		createProject: jest.fn(),
+		updateProject: jest.fn(),
+		searchProjects: jest.fn()
+	}
+})
 
 describe('POST /api/project', () => {
 	beforeEach(() => {
@@ -160,3 +162,18 @@ describe('GET /api/project', () => {
 
 	});
 });
+
+// describe('GET /api/project/search', () => {
+// 	beforeEach(() => {
+// 		projectMockRepository.searchProjects.mockReset()
+// 	})
+// 	test('search by location', () => {
+//
+// 		const res = await request.get('api/project/search').query({
+// 			locationX: 10,
+// 			locationY: 23
+// 		})
+//
+// 		console.log()
+// 	})
+// })
