@@ -4,7 +4,7 @@ const constants = require('../utils/constants')
 const authenticateToken = async (token) => {
     let config = {
         method: 'post',
-        url: 'https://seedy-fiuba-users-api.herokuapp.com/user/authenticate',
+        url: 'https://seedy-fiuba-users-api.herokuapp.com/auth/authenticate',
         headers: {
             'Content-Type': 'application/json'
         },
