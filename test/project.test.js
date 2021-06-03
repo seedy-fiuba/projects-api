@@ -23,24 +23,24 @@ describe('POST /api/project', () => {
 
 	test('should create a new project', async () => {
 		let body = {
-			title: "pad gamer",
-			description: "teclado gamer rgb con muchas luces",
-			category: "gamer",
-			mediaUrls: ["foto/fachera"],
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			location: {
 				x: -34.610955,
 				y: -58.436967
 			},
-			hashtags: ["gamer", "rgb", "mecanico"]
+			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
 		let doc = {
 			_id: 123,
-			title: "pad gamer",
-			description: "teclado gamer rgb con muchas luces",
-			category: "gamer",
-			mediaUrls: ["foto/fachera"],
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
 			location: {
@@ -48,11 +48,11 @@ describe('POST /api/project', () => {
 					-34.610955,
 					-58.436967
 				],
-				type: "Point"
+				type: 'Point'
 			},
-			hashtags: ["gamer", "rgb", "mecanico"]
+			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
-		projectMockRepository.createProject.mockReturnValueOnce(doc)
+		projectMockRepository.createProject.mockReturnValueOnce(doc);
 
 		const res = await request.post('/api/project').set('X-Override-Token','true').send(body);
 
@@ -95,23 +95,23 @@ describe('GET /api/project', () => {
 
 	test('update project id 456', async () => {
 		let body = {
-			title: "pad gamer",
-			description: "teclado gamer rgb con muchas luces",
-			category: "gamer",
-			mediaUrls: ["foto/fachera"],
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
 			location: {
 				x: -34.610955,
 				y: -58.436967
 			},
-			hashtags: ["gamer", "rgb", "mecanico"]
+			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
 		let projectUpdated = {
 			_id: 123,
-			title: "pad gamer",
-			description: "teclado gamer rgb con muchas luces",
-			category: "gamer",
-			mediaUrls: ["foto/fachera"],
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
 			location: {
@@ -119,9 +119,9 @@ describe('GET /api/project', () => {
 					-34.610955,
 					-58.436967
 				],
-				type: "Point"
+				type: 'Point'
 			},
-			hashtags: ["gamer", "rgb", "mecanico"]
+			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
 		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
@@ -138,15 +138,15 @@ describe('GET /api/project', () => {
 	test('update project id 456 fails due to db unavailable', async () => {
 
 		let body = {
-			title: "pad gamer",
-			description: "teclado gamer rgb con muchas luces",
-			category: "gamer",
-			mediaUrls: ["foto/fachera"],
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
 			location: {
 				x: -34.610955,
 				y: -58.436967
 			},
-			hashtags: ["gamer", "rgb", "mecanico"]
+			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
 		projectMockRepository.updateProject.mockImplementationOnce(() => {

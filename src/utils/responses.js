@@ -52,4 +52,4 @@ exports.internalServerError = (res, msg) => {
 		message: msg
 	};
 	return res.status(500).json(data);
-}
+};

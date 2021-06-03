@@ -1,6 +1,6 @@
 let projectDB = require('../repository/projects');
-const validator = require('./validator')
-const constants = require('../utils/constants')
+const validator = require('./validator');
+const constants = require('../utils/constants');
 
 // This is used just for testing
 const setProjectDB = (repository) => {
@@ -18,10 +18,10 @@ const getProjectByid = async (req, res) => {
 };
 
 const createProject = async (req, res) => {
-	let {value, error} = validator.createProject(req.body)
+	let {value, error} = validator.createProject(req.body);
 	if(error) {
-		error.name = constants.error.BAD_REQUEST
-		throw error
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
 	}
 
 	let project = await projectDB.createProject(value);
@@ -30,10 +30,10 @@ const createProject = async (req, res) => {
 };
 
 const updateProject = async (req, res) => {
-	let {value, error} = validator.updateProject(req.body)
+	let {value, error} = validator.updateProject(req.body);
 	if(error) {
-		error.name = constants.error.BAD_REQUEST
-		throw error
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
 	}
 
 	const project = await projectDB.updateProject(req.params.id, value);

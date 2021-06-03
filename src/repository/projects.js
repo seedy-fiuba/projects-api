@@ -10,22 +10,22 @@ const getProjectByid = async (id) => {
 
 const createProject = async (data) => {
 	let newProject = new Project();
-	newProject.title = data.title
-	newProject.description = data.description
-	newProject.category = data.category
-	newProject.status = 'created'
-	newProject.mediaUrls = data.mediaUrls
-	newProject.targetAmount = data.targetAmount
-	newProject.fundedAmount = 0.0
+	newProject.title = data.title;
+	newProject.description = data.description;
+	newProject.category = data.category;
+	newProject.status = 'created';
+	newProject.mediaUrls = data.mediaUrls;
+	newProject.targetAmount = data.targetAmount;
+	newProject.fundedAmount = 0.0;
 	newProject.location = {
 		type: 'Point',
 		coordinates: [data.location.x, data.location.y]
-	}
-	newProject.hashtags = data.hashtags
+	};
+	newProject.hashtags = data.hashtags;
 
 	let savedProject = await newProject.save();
 
-	console.log('project created successfully\n' + savedProject)
+	console.log('project created successfully\n' + savedProject);
 
 	return savedProject;
 };
@@ -35,11 +35,11 @@ const updateProject = async (id, newValues) => {
 	newValues.location = {
 		type: 'Point',
 		coordinates: [newValues.location.x, newValues.location.y]
-	}
+	};
 
 	let updatedProject = await Project.findByIdAndUpdate(id, newValues, {new: true});
 
-	console.log('project updated successfully\n' + updatedProject)
+	console.log('project updated successfully\n' + updatedProject);
 
 	return updatedProject;
 };
