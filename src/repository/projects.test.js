@@ -124,3 +124,239 @@ describe('POST project', () => {
 	});
 });
 
+describe('search projects', () => {
+	mockingoose(projectModel);
+
+	beforeEach(() => {
+		mockingoose(projectModel).reset(); // will reset all operations;
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
+
+	});
+
+	test('search by location', async () => {
+		let projectDoc = {
+			_id: 123,
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico']
+		};
+
+		let queryValues = {
+			locationX: -34.610955,
+			locationY: -58.436967,
+		};
+
+		const finderMock = param => {
+			const query = param.getQuery();
+
+			if (!query['location']) {
+				fail('missing location in query');
+			}
+
+			if(!query['location']['$near']) {
+				fail('missing operator "$near" in query');
+			}
+
+			if(!query['location']['$near']['$maxDistance']) {
+				fail('missing operator "$maxDistance" in "$near" query');
+			}
+
+			if(!query['location']['$near']['$geometry']) {
+				fail('missing operator "$maxDistance" in "$near" query');
+			}
+
+			if(!query['location']['$near']['$geometry']['type']) {
+				fail('missing field type in "$geometry" query');
+			}
+
+			if(query['location']['$near']['$geometry']['type'] !== 'Point') {
+				fail('Invalid value in field "type" in $geometry query');
+			}
+
+			if(!query['location']['$near']['$geometry']['coordinates']) {
+				fail('missing field coordinates in "$geometry" query');
+			}
+
+			if(query['location']['$near']['$geometry']['coordinates'].length !== 2) {
+				fail('Invalid length of coordinates');
+			}
+
+			if(query['location']['$near']['$geometry']['coordinates'][0] !== -34.610955) {
+				fail('Invalid x coordinate');
+			}
+
+			if(query['location']['$near']['$geometry']['coordinates'][1] !== -58.436967) {
+				fail('Invalid y coordinate');
+			}
+
+			return projectDoc;
+		};
+
+		mockingoose(projectModel).toReturn(finderMock, 'find');
+
+		const projectResult = await projectRepository.searchProjects(queryValues);
+
+		expect(JSON.parse(JSON.stringify(projectResult))).toStrictEqual(projectDoc);
+	});
+
+	test('search by category', async () => {
+		let projectDoc = {
+			_id: 123,
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico']
+		};
+
+		let queryValues = {
+			category: 'boquita',
+		};
+
+		const finderMock = param => {
+			const query = param.getQuery();
+
+			if (!query['category']) {
+				fail('missing category in query');
+			}
+
+			if (!query['category']['$in']) {
+				fail('missing "$in" in operator in query');
+			}
+
+			if (query['category']['$in'] !== 'boquita') {
+				fail('unexpected value in category query ' + query['category']['$in']);
+			}
+
+			return projectDoc;
+		};
+
+		mockingoose(projectModel).toReturn(finderMock, 'find');
+
+		const projectResult = await projectRepository.searchProjects(queryValues);
+
+		expect(JSON.parse(JSON.stringify(projectResult))).toStrictEqual(projectDoc);
+	});
+
+	test('search by hashtags', async () => {
+		let projectDoc = {
+			_id: 123,
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico']
+		};
+
+		let hashtags = ['boquita', 'el', 'mas', 'grande'];
+		let queryValues = {
+			hashtags: hashtags,
+		};
+
+		const finderMock = param => {
+			const query = param.getQuery();
+
+			if (!query['hashtags']) {
+				fail('missing category in query');
+			}
+
+			if (!query['hashtags']['$in']) {
+				fail('missing "$in" in operator in query');
+			}
+
+			if (query['hashtags']['$in'].length !== hashtags.length) {
+				fail('unexpected length of hashtags ' + query['hashtags']['$in']);
+			}
+
+			query['hashtags']['$in'].forEach(e => {
+				if(!hashtags.includes(e)) {
+					fail('unexpected element in hashtag list ' + e);
+				}
+			});
+
+			return projectDoc;
+		};
+
+		mockingoose(projectModel).toReturn(finderMock, 'find');
+
+		const projectResult = await projectRepository.searchProjects(queryValues);
+
+		expect(JSON.parse(JSON.stringify(projectResult))).toStrictEqual(projectDoc);
+	});
+
+	test('search by status', async () => {
+		let projectDoc = {
+			_id: 123,
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico']
+		};
+
+		let queryValues = {
+			status: 'pending',
+		};
+
+		const finderMock = param => {
+			const query = param.getQuery();
+
+			if (!query['status']) {
+				fail('missing status in query');
+			}
+
+			if (query['status'] !== 'pending') {
+				fail('unexpected status: ' + query['status']);
+			}
+
+			return projectDoc;
+		};
+
+		mockingoose(projectModel).toReturn(finderMock, 'find');
+
+		const projectResult = await projectRepository.searchProjects(queryValues);
+
+		expect(JSON.parse(JSON.stringify(projectResult))).toStrictEqual(projectDoc);
+	});
+});

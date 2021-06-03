@@ -1,6 +1,7 @@
 let projectDB = require('../repository/projects');
 const validator = require('./validator');
 const constants = require('../utils/constants');
+const ControllerError = require('../exceptions/ControllerError');
 const apiResponse = require('../utils/responses');
 
 const getProject = async (req, res) => {
@@ -10,6 +11,10 @@ const getProject = async (req, res) => {
 
 const getProjectByid = async (req, res) => {
 	let project = await projectDB.getProjectByid(req.params.id);
+	if(!project) {
+		throw new ControllerError(constants.error.NOT_FOUND, 'inexistent project');
+	}
+
 	res.status(200).json(project);
 };
 
