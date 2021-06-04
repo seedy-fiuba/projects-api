@@ -19,6 +19,7 @@ const getProjectByid = async (req, res) => {
 };
 
 const createProject = async (req, res) => {
+	// ToDo ownerId sale del token
 	let {value, error} = validator.createProject(req.body);
 	if(error) {
 		error.name = constants.error.BAD_REQUEST;

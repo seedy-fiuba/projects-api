@@ -15,8 +15,8 @@ const createProject = (data) => {
 			y: Joi.number().required(),
 		}).required(),
 		hashtags: Joi.array().unique().items(Joi.string()).required(),
-		ownerId: Joi.number().greater(0).required(),
-		reviewerId: Joi.number().greater(0).required(),
+		ownerId: Joi.number().greater(0),
+		reviewerId: Joi.number().greater(0),
 		finishDate: Joi.date().greater('now').required()
 	});
 
@@ -34,6 +34,7 @@ const updateProject = (data) => {
 			y: Joi.number().required(),
 		}).required(),
 		hashtags: Joi.array().unique().items(Joi.string()).required(),
+		reviewerId: Joi.number().greater(0).required(),
 	});
 
 	return schema.validate(data);
