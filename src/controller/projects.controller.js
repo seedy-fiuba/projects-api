@@ -19,11 +19,16 @@ const getProjectByid = async (req, res) => {
 };
 
 const createProject = async (req, res) => {
-	// ToDo ownerId sale del token
 	let {value, error} = validator.createProject(req.body);
 	if(error) {
 		error.name = constants.error.BAD_REQUEST;
 		throw error;
+	}
+
+	if (res.locals['ownerId']) {
+		value.ownerId = res.locals.ownerId
+	} else if(value.ownerId <= 0) {
+		return apiResponse.badRequest(res, "ownerId empty, use a token from users or send an ownerId in the body")
 	}
 
 	let project = await projectDB.createProject(value);
