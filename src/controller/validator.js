@@ -6,12 +6,18 @@ const createProject = (data) => {
 		description: Joi.string().min(10).max(1024).required(),
 		category: Joi.string().min(3).max(255).required(),
 		mediaUrls: Joi.array().unique().items(Joi.string()).required(),
-		targetAmount: Joi.number().greater(0).required(),
+		stages: Joi.array().items(Joi.object({
+			track: Joi.string().min(3).max(255).required(),
+			targetAmount: Joi.number().greater(0).required()
+		})).required(),
 		location: Joi.object({
 			x: Joi.number().required(),
 			y: Joi.number().required(),
 		}).required(),
 		hashtags: Joi.array().unique().items(Joi.string()).required(),
+		ownerId: Joi.number().greater(0).required(),
+		reviewerId: Joi.number().greater(0).required(),
+		finishDate: Joi.date().greater('now').required()
 	});
 
 	return schema.validate(data);
