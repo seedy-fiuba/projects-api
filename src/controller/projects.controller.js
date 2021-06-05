@@ -1,11 +1,8 @@
 let projectDB = require('../repository/projects');
 const validator = require('./validator');
 const constants = require('../utils/constants');
-
-// This is used just for testing
-const setProjectDB = (repository) => {
-	projectDB = repository;
-};
+const ControllerError = require('../exceptions/ControllerError');
+const apiResponse = require('../utils/responses');
 
 const getProject = async (req, res) => {
 	let response = await projectDB.getProject();
@@ -14,6 +11,10 @@ const getProject = async (req, res) => {
 
 const getProjectByid = async (req, res) => {
 	let project = await projectDB.getProjectByid(req.params.id);
+	if(!project) {
+		throw new ControllerError(constants.error.NOT_FOUND, 'inexistent project');
+	}
+
 	res.status(200).json(project);
 };
 
@@ -41,10 +42,45 @@ const updateProject = async (req, res) => {
 	res.status(200).json(project);
 };
 
+const searchProjects = async (req, res) => {
+	let {value, error} = validator.searchProject(req['query']);
+	if(error) {
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
+	}
+
+	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'])) {
+		return apiResponse.badRequest(res, 'A search criteria is required');
+	}
+
+	if(value['category']) {
+		value['category'] = value['category'].split(',');
+	}
+
+	if(value['hashtags']) {
+		value['hashtags'] = value['hashtags'].split(',');
+	}
+
+	if((value['locationX'] && !value['locationY']) || (!value['locationX'] && value['locationY'])) {
+		return apiResponse.badRequest(res, 'locationX and locationY are needed for location search');
+	}
+
+	let response = await projectDB.searchProjects(value);
+
+	if (response.length === 0)  {
+		return apiResponse.notFoundResponse(res, 'not found projects matching the criteria ' + JSON.stringify(value));
+	}
+
+	res.status(200).json({
+		size: response.length,
+		results: response
+	});
+};
+
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
 	updateProject,
-	setProjectDB
+	searchProjects,
 };

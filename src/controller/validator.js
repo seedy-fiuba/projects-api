@@ -33,7 +33,20 @@ const updateProject = (data) => {
 	return schema.validate(data);
 };
 
+const searchProject = (data) => {
+	const schema = Joi.object({
+		status: Joi.string().min(3).max(255), //ToDo aca solo se deberian poder buscar status discretos
+		category: Joi.string().min(3).max(255),
+		locationX: Joi.number(),
+		locationY: Joi.number(),
+		hashtags: Joi.string().min(3).max(255),
+	});
+
+	return schema.validate(data);
+};
+
 module.exports = {
 	createProject,
-	updateProject
+	updateProject,
+	searchProject
 };
