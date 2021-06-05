@@ -26,9 +26,9 @@ const createProject = async (req, res) => {
 	}
 
 	if (res.locals['ownerId']) {
-		value.ownerId = res.locals.ownerId
+		value.ownerId = res.locals.ownerId;
 	} else if(value.ownerId <= 0) {
-		return apiResponse.badRequest(res, "ownerId empty, use a token from users or send an ownerId in the body")
+		return apiResponse.badRequest(res, 'ownerId empty, use a token from users or send an ownerId in the body');
 	}
 
 	let project = await projectDB.createProject(value);
@@ -48,9 +48,9 @@ const updateProject = async (req, res) => {
 	}
 
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
-	let oldProject = await projectDB.getProjectByid(req.params.id)
+	let oldProject = await projectDB.getProjectByid(req.params.id);
 	if (!oldProject) {
-		return apiResponse.notFoundResponse(res, "inexistent project")
+		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
 	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {

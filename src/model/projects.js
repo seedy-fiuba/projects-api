@@ -23,10 +23,10 @@ let projectSchema = new Schema({
 	status: {type: String, required: true},
 	mediaUrls: {type: [String], required: true},
 	stages: {type: [{
-			track: {type: String, required: true},
-			targetAmount: {type: Number, required: true},
-			status: {type: String, required: true},
-		}], required: true},
+		track: {type: String, required: true},
+		targetAmount: {type: Number, required: true},
+		status: {type: String, required: true},
+	}], required: true},
 	fundedAmount: {type: Number, required: true},
 	location: {
 		type: pointSchema,

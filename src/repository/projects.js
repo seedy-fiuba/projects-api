@@ -1,5 +1,5 @@
 let Project = require('../model/projects');
-const constants = require('../utils/constants')
+const constants = require('../utils/constants');
 
 const getProject = async () => {
 	return await Project.find({});
@@ -22,13 +22,13 @@ const createProject = async (data) => {
 		coordinates: [data.location.x, data.location.y]
 	};
 	newProject.hashtags = data.hashtags;
-	data.stages.forEach(e => e.status = 'pending')
-	newProject.stages = data.stages
-	newProject.ownerId = data.ownerId
-	newProject.reviewerId = data['reviewerId'] ? data.reviewerId : 0
-	newProject.finishDate = data.finishDate
+	data.stages.forEach(e => e.status = 'pending');
+	newProject.stages = data.stages;
+	newProject.ownerId = data.ownerId;
+	newProject.reviewerId = data['reviewerId'] ? data.reviewerId : 0;
+	newProject.finishDate = data.finishDate;
 
-	console.log(newProject)
+	console.log(newProject);
 
 	let savedProject = await newProject.save();
 

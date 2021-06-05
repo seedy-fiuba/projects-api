@@ -49,14 +49,14 @@ app.use(async (req, res, next) => {
 			return apiResponse.unauthorizedResponse(res, 'invalid token');
 		}
 
-		return apiResponse.internalServerError(res, "Error trying to validate token: " + JSON.stringify(result));
+		return apiResponse.internalServerError(res, 'Error trying to validate token: ' + JSON.stringify(result));
 	}
 
 	if (!result['identity']['id']) {
-		return apiResponse.badRequest(res, "invalid token, unable to get id from token")
+		return apiResponse.badRequest(res, 'invalid token, unable to get id from token');
 	}
 
-	res.locals.ownerId = result['identity']['id']
+	res.locals.ownerId = result['identity']['id'];
 	next();
 });
 

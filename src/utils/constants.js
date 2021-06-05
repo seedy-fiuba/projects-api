@@ -8,10 +8,10 @@ const errorCodes = {
 };
 
 const projectStatus = {
-	created: "created",
-	inProgress: "in-progress",
-	done: "done"
-}
+	created: 'created',
+	inProgress: 'in-progress',
+	done: 'done'
+};
 
 module.exports = {
 	error: errorCodes,
