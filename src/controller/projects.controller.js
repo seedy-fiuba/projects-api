@@ -43,6 +43,16 @@ const updateProject = async (req, res) => {
 		throw error;
 	}
 
+	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['hashtags'] || value['status'] || value['location'] || value['hashtags'] || value['reviewerId'])) {
+		return apiResponse.badRequest(res, 'at least one field is required to update');
+	}
+
+	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
+	let oldProject = await projectDB.getProjectByid(req.params.id)
+	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
+		value.status = constants.projectStatus.inProgress;
+	}
+
 	const project = await projectDB.updateProject(req.params.id, value);
 
 	res.status(200).json(project);

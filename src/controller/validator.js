@@ -25,16 +25,16 @@ const createProject = (data) => {
 
 const updateProject = (data) => {
 	const schema = Joi.object({
-		title: Joi.string().min(3).max(255).required(),
-		description: Joi.string().min(10).max(1024).required(),
-		category: Joi.string().min(3).max(255).required(),
-		mediaUrls: Joi.array().unique().items(Joi.string()).required(),
+		title: Joi.string().min(3).max(255),
+		description: Joi.string().min(10).max(1024),
+		category: Joi.string().min(3).max(255),
+		mediaUrls: Joi.array().unique().items(Joi.string()),
 		location: Joi.object({
 			x: Joi.number().required(),
 			y: Joi.number().required(),
-		}).required(),
-		hashtags: Joi.array().unique().items(Joi.string()).required(),
-		reviewerId: Joi.number().greater(0).required(),
+		}),
+		hashtags: Joi.array().unique().items(Joi.string()),
+		reviewerId: Joi.number().greater(0),
 	});
 
 	return schema.validate(data);

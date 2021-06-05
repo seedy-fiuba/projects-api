@@ -1,4 +1,5 @@
 let Project = require('../model/projects');
+const constants = require('../utils/constants')
 
 const getProject = async () => {
 	return await Project.find({});
@@ -13,7 +14,7 @@ const createProject = async (data) => {
 	newProject.title = data.title;
 	newProject.description = data.description;
 	newProject.category = data.category;
-	newProject.status = 'created';
+	newProject.status = constants.projectStatus.created;
 	newProject.mediaUrls = data.mediaUrls;
 	newProject.fundedAmount = 0.0;
 	newProject.location = {
@@ -38,10 +39,12 @@ const createProject = async (data) => {
 
 const updateProject = async (id, newValues) => {
 
-	newValues.location = {
-		type: 'Point',
-		coordinates: [newValues.location.x, newValues.location.y]
-	};
+	if (newValues['location']) {
+		newValues.location = {
+			type: 'Point',
+			coordinates: [newValues.location.x, newValues.location.y]
+		};
+	}
 
 	let updatedProject = await Project.findByIdAndUpdate(id, newValues, {new: true});
 

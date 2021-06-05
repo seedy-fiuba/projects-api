@@ -7,6 +7,13 @@ const errorCodes = {
 	INTERNAL_SERVER_ERROR: 'InternalServerError'
 };
 
+const projectStatus = {
+	created: "created",
+	inProgress: "in-progress",
+	done: "done"
+}
+
 module.exports = {
-	error: errorCodes
+	error: errorCodes,
+	projectStatus: projectStatus
 };
