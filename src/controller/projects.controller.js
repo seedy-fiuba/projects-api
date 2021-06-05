@@ -31,6 +31,13 @@ const createProject = async (req, res) => {
 		return apiResponse.badRequest(res, 'ownerId empty, use a token from users or send an ownerId in the body');
 	}
 
+	if (value['reviewerId']) {
+		value['status'] = constants.projectStatus.inProgress
+	} else {
+		value['reviewerId'] = 0
+		value['status'] = constants.projectStatus.created
+	}
+
 	let project = await projectDB.createProject(value);
 
 	res.status(200).json(project);
