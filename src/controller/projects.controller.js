@@ -49,6 +49,10 @@ const updateProject = async (req, res) => {
 
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
 	let oldProject = await projectDB.getProjectByid(req.params.id)
+	if (!oldProject) {
+		return apiResponse.notFoundResponse(res, "inexistent project")
+	}
+
 	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
 		value.status = constants.projectStatus.inProgress;
 	}

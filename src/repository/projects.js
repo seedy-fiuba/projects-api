@@ -14,7 +14,7 @@ const createProject = async (data) => {
 	newProject.title = data.title;
 	newProject.description = data.description;
 	newProject.category = data.category;
-	newProject.status = constants.projectStatus.created;
+	newProject.status = data['reviewerId'] ? constants.projectStatus.inProgress : constants.projectStatus.created;
 	newProject.mediaUrls = data.mediaUrls;
 	newProject.fundedAmount = 0.0;
 	newProject.location = {
@@ -25,7 +25,7 @@ const createProject = async (data) => {
 	data.stages.forEach(e => e.status = 'pending')
 	newProject.stages = data.stages
 	newProject.ownerId = data.ownerId
-	newProject.reviewerId = data.reviewerId
+	newProject.reviewerId = data['reviewerId'] ? data.reviewerId : 0
 	newProject.finishDate = data.finishDate
 
 	console.log(newProject)
