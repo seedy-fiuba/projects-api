@@ -1,5 +1,4 @@
 let Project = require('../model/projects');
-const constants = require('../utils/constants');
 
 const getProject = async () => {
 	return await Project.find({});
