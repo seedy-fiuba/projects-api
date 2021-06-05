@@ -3,13 +3,35 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 let Schema = mongoose.Schema;
 
+const pointSchema = new mongoose.Schema({
+	type: {
+		type: String,
+		enum: ['Point'],
+		required: true
+	},
+	coordinates: {
+		type: [Number],
+		required: true
+	}
+}, {_id: false  });
+
 let projectSchema = new Schema({
 	_id: Number,
-	name: { type: String, required: true},
-	description: { type: String, required: true}
+	title: { type: String, required: true},
+	description: { type: String, required: true},
+	category: {type: String, required: true},
+	status: {type: String, required: true},
+	mediaUrls: {type: [String], required: true},
+	targetAmount: {type: Number, required: true},
+	fundedAmount: {type: Number, required: true},
+	location: {
+		type: pointSchema,
+		index: '2dsphere' // Create a special 2dsphere index this is required for $near and $geoNear operator
+	},
+	hashtags: {type: [String], required: false},
 }, { timestamps: true, _id: false  }); // timestamps adds "createdAt" and "updatedAt" fields
 
-if (process.env.SCOPE === 'PROD') {
+if (process.env.NODE_ENV !== 'test') {
 	projectSchema.plugin(AutoIncrement);
 }
 
