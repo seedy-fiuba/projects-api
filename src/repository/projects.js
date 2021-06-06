@@ -67,6 +67,10 @@ const searchProjects = async (queryValues) => {
 		query['status'] =  queryValues.status;
 	}
 
+	if (queryValues['ownerId']) {
+		query['ownerId'] =  queryValues.ownerId;
+	}
+
 	if (queryValues['locationX']) {
 		query['location'] =  {
 			$near: {

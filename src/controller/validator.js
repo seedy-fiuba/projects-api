@@ -46,6 +46,7 @@ const searchProject = (data) => {
 		category: Joi.string().min(3).max(255),
 		locationX: Joi.number(),
 		locationY: Joi.number(),
+		ownerId: Joi.number().greater(0),
 		hashtags: Joi.string().min(3).max(255),
 	});
 
