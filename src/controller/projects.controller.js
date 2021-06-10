@@ -3,6 +3,7 @@ const validator = require('./validator');
 const constants = require('../utils/constants');
 const ControllerError = require('../exceptions/ControllerError');
 const apiResponse = require('../utils/responses');
+const metrics = require('datadog-metrics');
 
 const getProject = async (req, res) => {
 	let response = await projectDB.getProject();
@@ -40,6 +41,13 @@ const createProject = async (req, res) => {
 
 	let project = await projectDB.createProject(value);
 
+	metrics.increment('creation', 1, ['category:' + project['category'], 'ownerId:' + project['ownerId']]);
+	metrics.increment('status', 1, ['status:' + project['status']]);
+
+	const avgProjects = await projectDB.getAvgProjectsByUser()
+	console.log(avgProjects[0])
+	metrics.gauge('avgPerUser', avgProjects[0]['projectAvgByUser'])
+
 	res.status(200).json(project);
 };
 
@@ -62,6 +70,7 @@ const updateProject = async (req, res) => {
 
 	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
 		value.status = constants.projectStatus.inProgress;
+		metrics.increment('status', 1, ['status:' + value.status]);
 	}
 
 	const project = await projectDB.updateProject(req.params.id, value);
