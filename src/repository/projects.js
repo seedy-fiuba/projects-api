@@ -12,17 +12,17 @@ const getAvgProjectsByUser = async () => {
 	return Project.aggregate( [
 		{
 			$group: {
-				_id: "$ownerId",
+				_id: '$ownerId',
 				count: { $sum: 1 }
 			}
 		},{
 			$group: {
 				_id: null,
-				projectAvgByUser: { $avg: "$count"}
+				projectAvgByUser: { $avg: '$count'}
 			}
 		}
-	]).exec()
-}
+	]).exec();
+};
 
 const createProject = async (data) => {
 	let newProject = new Project();

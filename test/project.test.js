@@ -2,11 +2,11 @@ const supertest = require('supertest');
 const server = require('../src/server');
 let request = supertest(server.app);
 let projectMockRepository = require('../src/repository/projects');
-let authenticationMock = require('../src/client/authentication')
+let authenticationMock = require('../src/client/authentication');
 
 jest.mock('../src/client/authentication', () => {
-	return {authenticateToken: jest.fn()}
-})
+	return {authenticateToken: jest.fn()};
+});
 
 jest.mock('../src/repository/projects', () => {
 	return {
@@ -22,8 +22,8 @@ jest.mock('../src/repository/projects', () => {
 describe('POST /api/project', () => {
 	beforeEach(() => {
 		projectMockRepository.createProject.mockReset();
-		authenticationMock.authenticateToken.mockReset()
-		projectMockRepository.getAvgProjectsByUser.mockReset()
+		authenticationMock.authenticateToken.mockReset();
+		projectMockRepository.getAvgProjectsByUser.mockReset();
 	});
 
 	afterAll(() => {
@@ -31,8 +31,8 @@ describe('POST /api/project', () => {
 	});
 
 	test('should create a new project', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let body = {
 			title: 'pad gamer',
@@ -45,11 +45,11 @@ describe('POST /api/project', () => {
 			},
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -75,11 +75,11 @@ describe('POST /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -98,17 +98,17 @@ describe('POST /api/project', () => {
 		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.status = 'created'
-		body.reviewerId = 0
-		body.finishDate = tomorrow
+		body.status = 'created';
+		body.reviewerId = 0;
+		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
 	});
 
 	test('create a new project use ownerId from token', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let body = {
 			title: 'pad gamer',
@@ -121,11 +121,11 @@ describe('POST /api/project', () => {
 			},
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -150,11 +150,11 @@ describe('POST /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -171,7 +171,7 @@ describe('POST /api/project', () => {
 			identity: {
 				id: 555
 			}
-		})
+		});
 
 		const res = await request.post('/api/project').set('X-auth-Token','asdfasdfasdfs').send(body);
 
@@ -180,18 +180,18 @@ describe('POST /api/project', () => {
 		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.status = 'created'
-		body.reviewerId = 0
-		body.ownerId = 555
-		body.finishDate = tomorrow
+		body.status = 'created';
+		body.reviewerId = 0;
+		body.ownerId = 555;
+		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
 	});
 
 	test('create a new project with reviewerId', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let body = {
 			title: 'pad gamer',
@@ -204,11 +204,11 @@ describe('POST /api/project', () => {
 			},
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -234,11 +234,11 @@ describe('POST /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -249,13 +249,13 @@ describe('POST /api/project', () => {
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
-		projectMockRepository.getAvgProjectsByUser.mockReturnValueOnce([{projectAvgByUser: 345.12}])
+		projectMockRepository.getAvgProjectsByUser.mockReturnValueOnce([{projectAvgByUser: 345.12}]);
 		authenticationMock.authenticateToken.mockReturnValueOnce({
 			message: 'authorized',
 			identity: {
 				id: 555
 			}
-		})
+		});
 
 		const res = await request.post('/api/project').set('X-auth-Token','asdfasdfasdfs').send(body);
 
@@ -264,9 +264,9 @@ describe('POST /api/project', () => {
 		expect(authenticationMock.authenticateToken.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.status = 'in-progress'
-		body.ownerId = 555
-		body.finishDate = tomorrow
+		body.status = 'in-progress';
+		body.ownerId = 555;
+		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -319,10 +319,10 @@ describe('GET /api/project', () => {
 
 describe('PUT /api/project/{projectId}', () => {
 	beforeEach(() => {
-		projectMockRepository.getProjectByid.mockReset()
-		projectMockRepository.updateProject.mockReset()
-		authenticationMock.authenticateToken.mockReset()
-	})
+		projectMockRepository.getProjectByid.mockReset();
+		projectMockRepository.updateProject.mockReset();
+		authenticationMock.authenticateToken.mockReset();
+	});
 
 	test('update project id 456', async () => {
 		let body = {
@@ -441,7 +441,7 @@ describe('PUT /api/project/{projectId}', () => {
 		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
 
-		body.status = 'in-progress'
+		body.status = 'in-progress';
 		expect(projectMockRepository.updateProject.mock.calls[0][1]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(projectUpdated);
@@ -462,7 +462,7 @@ describe('PUT /api/project/{projectId}', () => {
 		};
 
 		projectMockRepository.getProjectByid.mockImplementationOnce(() => {
-			return {}
+			return {};
 		});
 		projectMockRepository.updateProject.mockImplementationOnce(() => {
 			throw new Error('database unavailable');
@@ -603,8 +603,8 @@ describe('GET /api/project/search', () => {
 	});
 
 	test('search by status', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -616,11 +616,11 @@ describe('GET /api/project/search', () => {
 			status: 'in-progress',
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],

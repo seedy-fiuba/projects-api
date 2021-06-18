@@ -33,10 +33,10 @@ const createProject = async (req, res) => {
 	}
 
 	if (value['reviewerId']) {
-		value['status'] = constants.projectStatus.inProgress
+		value['status'] = constants.projectStatus.inProgress;
 	} else {
-		value['reviewerId'] = 0
-		value['status'] = constants.projectStatus.created
+		value['reviewerId'] = 0;
+		value['status'] = constants.projectStatus.created;
 	}
 
 	let project = await projectDB.createProject(value);
@@ -44,9 +44,9 @@ const createProject = async (req, res) => {
 	metrics.increment('creation', 1, ['category:' + project['category'], 'ownerId:' + project['ownerId']]);
 	metrics.increment('status', 1, ['status:' + project['status']]);
 
-	const avgProjects = await projectDB.getAvgProjectsByUser()
-	console.log(avgProjects[0])
-	metrics.gauge('avgPerUser', avgProjects[0]['projectAvgByUser'])
+	const avgProjects = await projectDB.getAvgProjectsByUser();
+	console.log(avgProjects[0]);
+	metrics.gauge('avgPerUser', avgProjects[0]['projectAvgByUser']);
 
 	res.status(200).json(project);
 };
