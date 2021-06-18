@@ -24,16 +24,30 @@ describe('POST /api/project', () => {
 	});
 
 	test('should create a new project', async () => {
+		let tomorrow = new Date()
+		tomorrow.setDate(tomorrow.getDate() + 1)
+
 		let body = {
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
 			mediaUrls: ['foto/fachera'],
-			targetAmount: 123.22,
 			location: {
 				x: -34.610955,
 				y: -58.436967
 			},
+			stages: [
+				{
+					track: "armado",
+					targetAmount: 12.22
+				},
+				{
+					track: "distribucion",
+					targetAmount: 125.22
+				}
+			],
+			finishDate: tomorrow.toISOString(),
+			ownerId: 234,
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
@@ -43,7 +57,6 @@ describe('POST /api/project', () => {
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
 			mediaUrls: ['foto/fachera'],
-			targetAmount: 123.22,
 			fundedAmount: 0.0,
 			location: {
 				coordinates: [
@@ -52,16 +65,36 @@ describe('POST /api/project', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			stages: [
+				{
+					track: "armado",
+					targetAmount: 12.22
+				},
+				{
+					track: "distribucion",
+					targetAmount: 125.22
+				}
+			],
+			finishDate: tomorrow.toISOString(),
+			ownerId: 234,
+			reviewerId: 0,
+			status: 'created',
 		};
+
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
 
 		const res = await request.post('/api/project').set('X-Override-Token','true').send(body);
 
 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1);
-		expect(projectMockRepository.createProject.mock.calls[0][0]).toMatchObject(body);
+
+		// payload for project creation
+		body.status = 'created'
+		body.reviewerId = 0
+		body.finishDate = tomorrow
+		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
-		expect(res.body).toMatchObject(doc);
+		expect(res.body).toStrictEqual(doc);
 	});
 });
 
@@ -108,6 +141,24 @@ describe('GET /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
+		let oldProject = {
+			_id: 123,
+			title: 'pad gamer re loco',
+			description: 'teclado gamer rgb con pocas luces',
+			category: 'rgb',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico']
+		};
+
 		let projectUpdated = {
 			_id: 123,
 			title: 'pad gamer',
@@ -126,10 +177,13 @@ describe('GET /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
+		projectMockRepository.getProjectByid.mockReturnValueOnce(oldProject);
 		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
 
 		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
 
+		expect(projectMockRepository.getProjectByid.mock.calls.length).toBe(1);
+		expect(projectMockRepository.getProjectByid.mock.calls[0][0]).toBe('456');
 		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
 		expect(projectMockRepository.updateProject.mock.calls[0][1]).toMatchObject(body);
@@ -151,6 +205,9 @@ describe('GET /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
+		projectMockRepository.getProjectByid.mockImplementationOnce(() => {
+			return {}
+		});
 		projectMockRepository.updateProject.mockImplementationOnce(() => {
 			throw new Error('database unavailable');
 		});
@@ -370,8 +427,8 @@ describe('GET /api/project/search', () => {
 			category: ['gamer']
 		});
 
-		expect(res.status).toBe(404);
-		expect(res.body.message).toBe('not found projects matching the criteria {"category":["gamer"]}');
+		expect(res.status).toBe(200);
+		expect(res.body).toStrictEqual({size: 0, results: []});
 	});
 
 	test('search by location missing locationY field', async () => {
