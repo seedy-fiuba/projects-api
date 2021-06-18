@@ -8,6 +8,22 @@ const getProjectByid = async (id) => {
 	return await Project.findById(id).exec();
 };
 
+const getAvgProjectsByUser = async () => {
+	return Project.aggregate( [
+		{
+			$group: {
+				_id: '$ownerId',
+				count: { $sum: 1 }
+			}
+		},{
+			$group: {
+				_id: null,
+				projectAvgByUser: { $avg: '$count'}
+			}
+		}
+	]).exec();
+};
+
 const createProject = async (data) => {
 	let newProject = new Project();
 	newProject.title = data.title;
@@ -89,5 +105,6 @@ module.exports = {
 	getProjectByid,
 	createProject,
 	searchProjects,
-	updateProject
+	updateProject,
+	getAvgProjectsByUser
 };

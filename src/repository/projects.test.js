@@ -14,8 +14,8 @@ describe('get project by id', () => {
 	});
 
 	test('should return project for id 123', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -27,11 +27,11 @@ describe('get project by id', () => {
 			status: 'in-progress',
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -56,8 +56,8 @@ describe('get project by id', () => {
 	});
 
 	test('should return project for id 456 with query spy', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 456,
@@ -69,11 +69,11 @@ describe('get project by id', () => {
 			status: 'in-progress',
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -117,8 +117,8 @@ describe('POST project', () => {
 	});
 
 	test('should create project id 123', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -130,11 +130,11 @@ describe('POST project', () => {
 			status: 'in-progress',
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -156,14 +156,14 @@ describe('POST project', () => {
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
 			mediaUrls: ['foto/fachera'],
-			status: "created",
+			status: 'created',
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
@@ -198,8 +198,8 @@ describe('search projects', () => {
 	});
 
 	test('search by location', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -209,18 +209,18 @@ describe('search projects', () => {
 			mediaUrls: ['foto/fachera'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
 			reviewerId: 456,
-			status: "in-progress",
+			status: 'in-progress',
 			fundedAmount: 0.0,
 			location: {
 				coordinates: [
@@ -291,8 +291,8 @@ describe('search projects', () => {
 	});
 
 	test('search by category', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -302,18 +302,18 @@ describe('search projects', () => {
 			mediaUrls: ['foto/fachera'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
 			reviewerId: 456,
-			status: "in-progress",
+			status: 'in-progress',
 			fundedAmount: 0.0,
 			location: {
 				coordinates: [
@@ -355,8 +355,8 @@ describe('search projects', () => {
 	});
 
 	test('search by hashtags', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -366,18 +366,18 @@ describe('search projects', () => {
 			mediaUrls: ['foto/fachera'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
 			reviewerId: 456,
-			status: "in-progress",
+			status: 'in-progress',
 			fundedAmount: 0.0,
 			location: {
 				coordinates: [
@@ -426,8 +426,8 @@ describe('search projects', () => {
 	});
 
 	test('search by status', async () => {
-		let tomorrow = new Date()
-		tomorrow.setDate(tomorrow.getDate() + 1)
+		let tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
 			_id: 123,
@@ -437,18 +437,18 @@ describe('search projects', () => {
 			mediaUrls: ['foto/fachera'],
 			stages: [
 				{
-					track: "armado",
+					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					track: "distribucion",
+					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
 			reviewerId: 456,
-			status: "in-progress",
+			status: 'in-progress',
 			fundedAmount: 0.0,
 			location: {
 				coordinates: [

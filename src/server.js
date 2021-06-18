@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const apiResponse = require('./utils/responses');
 const constants = require('./utils/constants');
 const authentication = require('./client/authentication');
+const cors = require('cors');
 require('express-async-errors'); // This is for catching errors from controllers and handle them in the next(), without using the next() keyword in the controllers
 
 // DB postgre config
@@ -29,6 +30,7 @@ const app = express();
 // Middleware
 app.use(express.json()); // parse application/json
 app.use(express.urlencoded({extended: false})); // parse application/x-www-form-urlencoded
+app.use(cors());
 app.use(async (req, res, next) => {
 	let token = req.header('X-Auth-Token');
 	let override = req.header('X-Override-Token');
