@@ -336,6 +336,8 @@ describe('GET /api/project/search', () => {
 	});
 
 	test('search by status', async () => {
+		let tomorrow = new Date()
+		tomorrow.setDate(tomorrow.getDate() + 1)
 
 		let projectDoc = {
 			_id: 123,
@@ -343,9 +345,21 @@ describe('GET /api/project/search', () => {
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
 			mediaUrls: ['foto/fachera'],
-			targetAmount: 123.22,
 			fundedAmount: 0.0,
-			status: 'pending',
+			status: 'in-progress',
+			stages: [
+				{
+					track: "armado",
+					targetAmount: 12.22
+				},
+				{
+					track: "distribucion",
+					targetAmount: 125.22
+				}
+			],
+			finishDate: tomorrow.toISOString(),
+			ownerId: 234,
+			reviewerId: 567,
 			location: {
 				coordinates: [
 					-34.610955,
