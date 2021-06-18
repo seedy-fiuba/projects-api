@@ -22,12 +22,19 @@ let projectSchema = new Schema({
 	category: {type: String, required: true},
 	status: {type: String, required: true},
 	mediaUrls: {type: [String], required: true},
-	targetAmount: {type: Number, required: true},
+	stages: {type: [{
+		track: {type: String, required: true},
+		targetAmount: {type: Number, required: true},
+		status: {type: String, required: true},
+	}], required: true},
 	fundedAmount: {type: Number, required: true},
 	location: {
 		type: pointSchema,
 		index: '2dsphere' // Create a special 2dsphere index this is required for $near and $geoNear operator
 	},
+	ownerId: {type: Number, required: true},
+	reviewerId: {type: Number, required: true},
+	finishDate: {type: Date, required: true},
 	hashtags: {type: [String], required: false},
 }, { timestamps: true, _id: false  }); // timestamps adds "createdAt" and "updatedAt" fields
 

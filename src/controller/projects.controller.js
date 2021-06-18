@@ -25,6 +25,19 @@ const createProject = async (req, res) => {
 		throw error;
 	}
 
+	if (res.locals['ownerId']) {
+		value.ownerId = res.locals.ownerId;
+	} else if(value.ownerId <= 0) {
+		return apiResponse.badRequest(res, 'ownerId empty, use a token from users or send an ownerId in the body');
+	}
+
+	if (value['reviewerId']) {
+		value['status'] = constants.projectStatus.inProgress
+	} else {
+		value['reviewerId'] = 0
+		value['status'] = constants.projectStatus.created
+	}
+
 	let project = await projectDB.createProject(value);
 
 	res.status(200).json(project);
@@ -35,6 +48,20 @@ const updateProject = async (req, res) => {
 	if(error) {
 		error.name = constants.error.BAD_REQUEST;
 		throw error;
+	}
+
+	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['hashtags'] || value['status'] || value['location'] || value['hashtags'] || value['reviewerId'])) {
+		return apiResponse.badRequest(res, 'at least one field is required to update');
+	}
+
+	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
+	let oldProject = await projectDB.getProjectByid(req.params.id);
+	if (!oldProject) {
+		return apiResponse.notFoundResponse(res, 'inexistent project');
+	}
+
+	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
+		value.status = constants.projectStatus.inProgress;
 	}
 
 	const project = await projectDB.updateProject(req.params.id, value);
@@ -49,7 +76,7 @@ const searchProjects = async (req, res) => {
 		throw error;
 	}
 
-	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'])) {
+	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'] || value['ownerId'])) {
 		return apiResponse.badRequest(res, 'A search criteria is required');
 	}
 
@@ -66,10 +93,6 @@ const searchProjects = async (req, res) => {
 	}
 
 	let response = await projectDB.searchProjects(value);
-
-	if (response.length === 0)  {
-		return apiResponse.notFoundResponse(res, 'not found projects matching the criteria ' + JSON.stringify(value));
-	}
 
 	res.status(200).json({
 		size: response.length,

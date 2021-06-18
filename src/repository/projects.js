@@ -13,15 +13,21 @@ const createProject = async (data) => {
 	newProject.title = data.title;
 	newProject.description = data.description;
 	newProject.category = data.category;
-	newProject.status = 'created';
+	newProject.status = data.status;
 	newProject.mediaUrls = data.mediaUrls;
-	newProject.targetAmount = data.targetAmount;
 	newProject.fundedAmount = 0.0;
 	newProject.location = {
 		type: 'Point',
 		coordinates: [data.location.x, data.location.y]
 	};
 	newProject.hashtags = data.hashtags;
+	data.stages.forEach(e => e.status = 'pending');
+	newProject.stages = data.stages;
+	newProject.ownerId = data.ownerId;
+	newProject.reviewerId = data.reviewerId;
+	newProject.finishDate = data.finishDate;
+
+	console.log(newProject);
 
 	let savedProject = await newProject.save();
 
@@ -32,10 +38,12 @@ const createProject = async (data) => {
 
 const updateProject = async (id, newValues) => {
 
-	newValues.location = {
-		type: 'Point',
-		coordinates: [newValues.location.x, newValues.location.y]
-	};
+	if (newValues['location']) {
+		newValues.location = {
+			type: 'Point',
+			coordinates: [newValues.location.x, newValues.location.y]
+		};
+	}
 
 	let updatedProject = await Project.findByIdAndUpdate(id, newValues, {new: true});
 
@@ -57,6 +65,10 @@ const searchProjects = async (queryValues) => {
 
 	if (queryValues['status']) {
 		query['status'] =  queryValues.status;
+	}
+
+	if (queryValues['ownerId']) {
+		query['ownerId'] =  queryValues.ownerId;
 	}
 
 	if (queryValues['locationX']) {
