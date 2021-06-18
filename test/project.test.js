@@ -14,7 +14,8 @@ jest.mock('../src/repository/projects', () => {
 		getProjectByid: jest.fn(),
 		createProject: jest.fn(),
 		updateProject: jest.fn(),
-		searchProjects: jest.fn()
+		searchProjects: jest.fn(),
+		getAvgProjectsByUser: jest.fn()
 	};
 });
 
@@ -22,6 +23,7 @@ describe('POST /api/project', () => {
 	beforeEach(() => {
 		projectMockRepository.createProject.mockReset();
 		authenticationMock.authenticateToken.mockReset()
+		projectMockRepository.getAvgProjectsByUser.mockReset()
 	});
 
 	afterAll(() => {
@@ -88,10 +90,12 @@ describe('POST /api/project', () => {
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
+		projectMockRepository.getAvgProjectsByUser.mockReturnValueOnce([{projectAvgByUser: 5.12}]);
 
 		const res = await request.post('/api/project').set('X-Override-Token','true').send(body);
 
 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1);
+		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
 		body.status = 'created'
@@ -161,6 +165,7 @@ describe('POST /api/project', () => {
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
+		projectMockRepository.getAvgProjectsByUser.mockReturnValueOnce([{projectAvgByUser: 2.5}]);
 		authenticationMock.authenticateToken.mockReturnValueOnce({
 			message: 'authorized',
 			identity: {
@@ -172,6 +177,7 @@ describe('POST /api/project', () => {
 
 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1);
 		expect(authenticationMock.authenticateToken.mock.calls.length).toBe(1);
+		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
 		body.status = 'created'
@@ -243,6 +249,7 @@ describe('POST /api/project', () => {
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
+		projectMockRepository.getAvgProjectsByUser.mockReturnValueOnce([{projectAvgByUser: 345.12}])
 		authenticationMock.authenticateToken.mockReturnValueOnce({
 			message: 'authorized',
 			identity: {
@@ -253,6 +260,7 @@ describe('POST /api/project', () => {
 		const res = await request.post('/api/project').set('X-auth-Token','asdfasdfasdfs').send(body);
 
 		expect(projectMockRepository.createProject.mock.calls.length).toBe(1);
+		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 		expect(authenticationMock.authenticateToken.mock.calls.length).toBe(1);
 
 		// payload for project creation
