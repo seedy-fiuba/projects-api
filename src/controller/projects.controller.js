@@ -68,7 +68,7 @@ const updateProject = async (req, res) => {
 		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
-	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
+	if (oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
 		value.status = constants.projectStatus.inProgress;
 		metrics.increment('status', 1, ['status:' + value.status]);
 	}
