@@ -29,6 +29,7 @@ const updateProject = (data) => {
 		description: Joi.string().min(10).max(1024),
 		category: Joi.string().min(3).max(255),
 		mediaUrls: Joi.array().unique().items(Joi.string()),
+		status: Joi.string(),
 		location: Joi.object({
 			x: Joi.number().required(),
 			y: Joi.number().required(),

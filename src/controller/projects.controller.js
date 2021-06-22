@@ -62,6 +62,10 @@ const updateProject = async (req, res) => {
 		return apiResponse.badRequest(res, 'at least one field is required to update');
 	}
 
+	if(value['status'] && !Object.values(constants.projectStatus).includes(value['status'])) {
+		return apiResponse.badRequest(res, 'Invalid status. Valid statuses are: ' + Object.values(constants.projectStatus));
+	}
+
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
 	let oldProject = await projectDB.getProjectByid(req.params.id);
 	if (!oldProject) {

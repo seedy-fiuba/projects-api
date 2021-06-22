@@ -485,6 +485,17 @@ describe('PUT /api/project/{projectId}', () => {
 		expect(res.text).toContain('at least one field is required to update');
 
 	});
+
+	test('fail update with invalid status', async () => {
+		let body = {
+			status: 'invalidStatus'
+		};
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
+		expect(res.status).toBe(400);
+		expect(res.text).toContain('Invalid status');
+	});
+
 });
 
 describe('GET /api/project/search', () => {
