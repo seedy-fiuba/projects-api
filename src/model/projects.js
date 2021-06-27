@@ -36,7 +36,16 @@ let projectSchema = new Schema({
 	reviewerId: {type: Number, required: true},
 	finishDate: {type: Date, required: true},
 	hashtags: {type: [String], required: false},
-}, { timestamps: true, _id: false  }); // timestamps adds "createdAt" and "updatedAt" fields
+}, {
+	timestamps: true,
+	_id: false,
+	toJSON: {
+		transform: function (doc, ret) {
+			ret.id = ret._id;
+			delete ret.__v;
+			delete ret._id;
+		}
+	}}); // timestamps adds "createdAt" and "updatedAt" fields
 
 if (process.env.NODE_ENV !== 'test') {
 	projectSchema.plugin(AutoIncrement);
