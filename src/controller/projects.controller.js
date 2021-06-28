@@ -35,7 +35,7 @@ const createProject = async (req, res) => {
 	if (value['reviewerId']) {
 		value['status'] = constants.projectStatus.inProgress;
 	} else {
-		value['reviewerId'] = 0;
+		value['reviewerId'] = null;
 		value['status'] = constants.projectStatus.created;
 	}
 
