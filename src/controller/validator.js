@@ -35,7 +35,7 @@ const updateProject = (data) => {
 			y: Joi.number().required(),
 		}),
 		hashtags: Joi.array().unique().items(Joi.string()),
-		reviewerId: Joi.number().greater(0),
+		reviewerId: Joi.number().greater(0)
 	});
 
 	return schema.validate(data);
@@ -49,6 +49,7 @@ const searchProject = (data) => {
 		locationY: Joi.number(),
 		ownerId: Joi.number().greater(0),
 		hashtags: Joi.string().min(3).max(255),
+		id: Joi.string().min(1)
 	});
 
 	return schema.validate(data);

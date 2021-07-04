@@ -89,7 +89,7 @@ const searchProjects = async (req, res) => {
 		throw error;
 	}
 
-	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'] || value['ownerId'])) {
+	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'] || value['ownerId'] || value['id'])) {
 		return apiResponse.badRequest(res, 'A search criteria is required');
 	}
 
@@ -99,6 +99,10 @@ const searchProjects = async (req, res) => {
 
 	if(value['hashtags']) {
 		value['hashtags'] = value['hashtags'].split(',');
+	}
+
+	if(value['id']) {
+		value['id'] = value['id'].split(',').map(Number);
 	}
 
 	if((value['locationX'] && !value['locationY']) || (!value['locationX'] && value['locationY'])) {

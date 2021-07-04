@@ -79,6 +79,10 @@ const searchProjects = async (queryValues) => {
 		query['hashtags'] =  {$in: queryValues.hashtags};
 	}
 
+	if (queryValues['id']) {
+		query['_id'] = {$in: queryValues.id};
+	}
+
 	if (queryValues['status']) {
 		query['status'] =  queryValues.status;
 	}
