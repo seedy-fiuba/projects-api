@@ -85,7 +85,7 @@ describe('POST /api/project', () => {
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
-			reviewerId: 0,
+			reviewerId: null,
 			status: 'created',
 		};
 
@@ -99,7 +99,7 @@ describe('POST /api/project', () => {
 
 		// payload for project creation
 		body.status = 'created';
-		body.reviewerId = 0;
+		body.reviewerId = null;
 		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
@@ -160,7 +160,7 @@ describe('POST /api/project', () => {
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 555,
-			reviewerId: 0,
+			reviewerId: null,
 			status: 'created',
 		};
 
@@ -181,7 +181,7 @@ describe('POST /api/project', () => {
 
 		// payload for project creation
 		body.status = 'created';
-		body.reviewerId = 0;
+		body.reviewerId = null;
 		body.ownerId = 555;
 		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
@@ -485,6 +485,17 @@ describe('PUT /api/project/{projectId}', () => {
 		expect(res.text).toContain('at least one field is required to update');
 
 	});
+
+	test('fail update with invalid status', async () => {
+		let body = {
+			status: 'invalidStatus'
+		};
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
+		expect(res.status).toBe(400);
+		expect(res.text).toContain('Invalid status');
+	});
+
 });
 
 describe('GET /api/project/search', () => {

@@ -9,6 +9,7 @@ const errorCodes = {
 
 const projectStatus = {
 	created: 'created',
+	pendingReviewer: 'pending-reviewer',
 	inProgress: 'in-progress',
 	done: 'done'
 };

@@ -18,7 +18,6 @@ describe('get project by id', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 123,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
@@ -60,7 +59,6 @@ describe('get project by id', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 456,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
@@ -121,7 +119,6 @@ describe('POST project', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 123,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
@@ -202,7 +199,6 @@ describe('search projects', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 123,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
@@ -295,7 +291,6 @@ describe('search projects', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 123,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
@@ -359,7 +354,6 @@ describe('search projects', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 123,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
@@ -430,7 +424,6 @@ describe('search projects', () => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		let projectDoc = {
-			_id: 123,
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',

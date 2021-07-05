@@ -29,12 +29,13 @@ const updateProject = (data) => {
 		description: Joi.string().min(10).max(1024),
 		category: Joi.string().min(3).max(255),
 		mediaUrls: Joi.array().unique().items(Joi.string()),
+		status: Joi.string(),
 		location: Joi.object({
 			x: Joi.number().required(),
 			y: Joi.number().required(),
 		}),
 		hashtags: Joi.array().unique().items(Joi.string()),
-		reviewerId: Joi.number().greater(0),
+		reviewerId: Joi.number().greater(0)
 	});
 
 	return schema.validate(data);
@@ -48,6 +49,7 @@ const searchProject = (data) => {
 		locationY: Joi.number(),
 		ownerId: Joi.number().greater(0),
 		hashtags: Joi.string().min(3).max(255),
+		id: Joi.string().min(1)
 	});
 
 	return schema.validate(data);

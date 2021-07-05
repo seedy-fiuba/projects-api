@@ -35,7 +35,7 @@ const createProject = async (req, res) => {
 	if (value['reviewerId']) {
 		value['status'] = constants.projectStatus.inProgress;
 	} else {
-		value['reviewerId'] = 0;
+		value['reviewerId'] = null;
 		value['status'] = constants.projectStatus.created;
 	}
 
@@ -62,13 +62,17 @@ const updateProject = async (req, res) => {
 		return apiResponse.badRequest(res, 'at least one field is required to update');
 	}
 
+	if(value['status'] && !Object.values(constants.projectStatus).includes(value['status'])) {
+		return apiResponse.badRequest(res, 'Invalid status. Valid statuses are: ' + Object.values(constants.projectStatus));
+	}
+
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
 	let oldProject = await projectDB.getProjectByid(req.params.id);
 	if (!oldProject) {
 		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
-	if (oldProject['status'] === constants.projectStatus.created && oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
+	if (oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
 		value.status = constants.projectStatus.inProgress;
 		metrics.increment('status', 1, ['status:' + value.status]);
 	}
@@ -85,7 +89,7 @@ const searchProjects = async (req, res) => {
 		throw error;
 	}
 
-	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'] || value['ownerId'])) {
+	if(!(value['category'] || value['hashtags'] || value['status'] || value['locationX'] || value['locationY'] || value['ownerId'] || value['id'])) {
 		return apiResponse.badRequest(res, 'A search criteria is required');
 	}
 
@@ -95,6 +99,10 @@ const searchProjects = async (req, res) => {
 
 	if(value['hashtags']) {
 		value['hashtags'] = value['hashtags'].split(',');
+	}
+
+	if(value['id']) {
+		value['id'] = value['id'].split(',').map(Number);
 	}
 
 	if((value['locationX'] && !value['locationY']) || (!value['locationX'] && value['locationY'])) {
