@@ -85,7 +85,7 @@ describe('POST /api/project', () => {
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
-			reviewerId: 0,
+			reviewerId: null,
 			status: 'created',
 		};
 
@@ -99,7 +99,7 @@ describe('POST /api/project', () => {
 
 		// payload for project creation
 		body.status = 'created';
-		body.reviewerId = 0;
+		body.reviewerId = null;
 		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
@@ -160,7 +160,7 @@ describe('POST /api/project', () => {
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 555,
-			reviewerId: 0,
+			reviewerId: null,
 			status: 'created',
 		};
 
@@ -181,7 +181,7 @@ describe('POST /api/project', () => {
 
 		// payload for project creation
 		body.status = 'created';
-		body.reviewerId = 0;
+		body.reviewerId = null;
 		body.ownerId = 555;
 		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
