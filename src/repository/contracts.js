@@ -1,3 +1,4 @@
+let Contract = require('../model/contract');
 const { Pool } = require('pg');
 
 let config;
@@ -53,9 +54,26 @@ const updateProject = async (id, name, description) => {
 	return await pool.query('UPDATE projects SET name = $1, description = $2 WHERE id = $3', [name, description, id]);
 };
 
+
+const createContract = async (data) => {
+	let newContract = new Contract();
+	newContract.funderId = data.funderId;
+	newContract.currentFundedAmount = data.currentFundedAmount;
+	newContract.txHash = data.txHash;
+
+	console.log(newContract);
+
+	let savedContract = await newContract.save();
+
+	console.log('contract created successfully\n' + savedContract);
+
+	return savedContract;
+};
+
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
-	updateProject
+	updateProject,
+	createContract
 };

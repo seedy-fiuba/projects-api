@@ -1,4 +1,5 @@
 let projectDB = require('../repository/projects');
+let contractDB = require('../repository/contracts');
 const validator = require('./validator');
 const constants = require('../utils/constants');
 const ControllerError = require('../exceptions/ControllerError');
@@ -60,7 +61,7 @@ const updateProject = async (req, res) => {
 		throw error;
 	}
 
-	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['hashtags']  || value['location'] || value['hashtags'] || value['reviewerId'] || value['currentStageId'] || value['status'] || value['currentStageId'])) {
+	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['location'] || value['hashtags'] || value['reviewerId'] || value['currentStageId'] || value['status'] || value['walletId'] || value['missingAmount'])) {
 		return apiResponse.badRequest(res, 'at least one field is required to update');
 	}
 
@@ -74,8 +75,12 @@ const updateProject = async (req, res) => {
 		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
-	if (value['status'] !== constants.status.funding) {
+	if (value['status'] !== oldProject['status']) {
 		metrics.increment('status', 1, ['status:' + value.status]);
+	}
+
+	if (value['missingAmount']) {
+		value['fundedAmount'] = oldProject['totalTargetAmount'] - value['missingAmount'];
 	}
 
 	const project = await projectDB.updateProject(req.params.id, value);
@@ -118,15 +123,15 @@ const searchProjects = async (req, res) => {
 	});
 };
 
-const updateProjectStatus = async (req, res) => {
-	let {value, error} = validator.updateProjectStatus(req.body);
+const fundProject = async (req, res) => {
+	let {value, error} = validator.createContract(req.body);
 	if(error) {
 		error.name = constants.error.BAD_REQUEST;
 		throw error;
 	}
-	const project = await projectDB.updateProjectStatus(req.params.id, value);
+	let contract = await contractDB.createContract(value);
 
-	res.status(200).json(project);
+	res.status(200).json(contract);
 };
 
 module.exports = {
@@ -135,5 +140,5 @@ module.exports = {
 	createProject,
 	updateProject,
 	searchProjects,
-	updateProjectStatus
+	fundProject
 };

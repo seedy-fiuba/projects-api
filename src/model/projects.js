@@ -37,7 +37,8 @@ let projectSchema = new Schema({
 	reviewerId: {type: Number, required: true},
 	finishDate: {type: Date, required: true},
 	hashtags: {type: [String], required: false},
-	walletId : {type: Number, required: false}
+	walletId : {type: Number, required: false},
+	totalTargetAmount : {type: Number, required: false}
 }, {
 	timestamps: true,
 	_id: false,

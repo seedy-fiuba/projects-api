@@ -8,6 +8,6 @@ router.get('/project/search', projectController.searchProjects);
 router.get('/project/:id', projectController.getProjectByid);
 router.post('/project', projectController.createProject);
 router.put('/project/:id', projectController.updateProject);
-router.put('/project/:id/contract', projectController.updateProjectStatus);
+router.put('/project/:id/fund', projectController.fundProject);
 
 module.exports = router;

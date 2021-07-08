@@ -42,7 +42,7 @@ const createProject = async (data) => {
 	newProject.ownerId = data.ownerId;
 	newProject.reviewerId = data.reviewerId;
 	newProject.finishDate = data.finishDate;
-
+	newProject.totalTargetAmount = data.stages.map(s => s.targetAmount).reduce((acum, v) => acum + v);
 	console.log(newProject);
 
 	let savedProject = await newProject.save();
@@ -104,21 +104,11 @@ const searchProjects = async (queryValues) => {
 	return Project.find(query);
 };
 
-const updateProjectStatus = async (id, newValues) => {
-
-	let updatedProject = await Project.findByIdAndUpdate(id, newValues,{new: true});
-
-	console.log('project status updated successfully\n' + updatedProject);
-
-	return updatedProject;
-};
-
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
 	searchProjects,
 	updateProject,
-	getAvgProjectsByUser,
-	updateProjectStatus
+	getAvgProjectsByUser
 };
