@@ -656,7 +656,7 @@ describe('GET /api/project/search', () => {
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: 'pending'
+			status: ['pending']
 		});
 
 		expect(res.status).toBe(200);
@@ -698,7 +698,7 @@ describe('GET /api/project/search', () => {
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: 'pending',
+			status: ['pending'],
 			hashtags: ['gamer', 'rgb']
 		});
 
