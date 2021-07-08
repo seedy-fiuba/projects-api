@@ -7,7 +7,6 @@ const createProject = (data) => {
 		category: Joi.string().min(3).max(255).required(),
 		mediaUrls: Joi.array().unique().items(Joi.string()).required(),
 		stages: Joi.array().items(Joi.object({
-			id: Joi.number().greater(0).required(),
 			track: Joi.string().min(3).max(255).required(),
 			targetAmount: Joi.number().greater(0).required()
 		})).required(),

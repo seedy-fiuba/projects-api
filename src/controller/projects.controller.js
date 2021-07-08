@@ -40,6 +40,10 @@ const createProject = async (req, res) => {
 		value['status'] = constants.status.created; //project created but sponsors cant start to fund it until it has a reviewer
 	}
 
+	for (let i = 0; i < value.stages.length; i++) {
+		value.stages[i].id = i;
+	}
+
 	value['currentStageId'] = value.stages[0].id;
 
 	let project = await projectDB.createProject(value);
