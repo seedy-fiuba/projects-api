@@ -34,7 +34,7 @@ let projectSchema = new Schema({
 		index: '2dsphere' // Create a special 2dsphere index this is required for $near and $geoNear operator
 	},
 	ownerId: {type: Number, required: true},
-	reviewerId: {type: Number, required: true},
+	reviewerId: {type: Number, default: null},
 	finishDate: {type: Date, required: true},
 	hashtags: {type: [String], required: false},
 	walletId : {type: Number, required: false},

@@ -36,7 +36,7 @@ const createProject = async (req, res) => {
 	if (value['reviewerId']) {
 		value['status'] = constants.status.funding;
 	} else {
-		value['reviewerId'] = 0;
+		value['reviewerId'] = null;
 		value['status'] = constants.status.created; //project created but sponsors cant start to fund it until it has a reviewer
 	}
 
