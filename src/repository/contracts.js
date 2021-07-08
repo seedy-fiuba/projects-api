@@ -57,6 +57,7 @@ const updateProject = async (id, name, description) => {
 
 const createContract = async (data) => {
 	let newContract = new Contract();
+	newContract.projectId = data.projectId;
 	newContract.funderId = data.funderId;
 	newContract.currentFundedAmount = data.currentFundedAmount;
 	newContract.txHash = data.txHash;

@@ -10,6 +10,7 @@ const errorCodes = {
 const status = {
 	created: 'created',
 	pendingReviewer: 'pending-reviewer',
+	stagePendingReviewer:'stage-pending-reviewer',
 	funding: 'funding',
 	inProgress: 'in-progress',
 	completed: 'completed'

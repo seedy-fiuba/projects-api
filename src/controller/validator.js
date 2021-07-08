@@ -62,6 +62,7 @@ const searchProject = (data) => {
 
 const createContract = (data) => {
 	const schema = Joi.object({
+		projectId: Joi.number(),
 		funderId: Joi.number().required(),
 		currentFundedAmount: Joi.number().required(),
 		txHash: Joi.string().required()
