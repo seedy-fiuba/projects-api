@@ -33,11 +33,13 @@ const createProject = async (req, res) => {
 	}
 
 	if (value['reviewerId']) {
-		value['status'] = constants.projectStatus.inProgress;
+		value['status'] = constants.status.funding;
 	} else {
 		value['reviewerId'] = null;
-		value['status'] = constants.projectStatus.created;
+		value['status'] = constants.status.created; //project created but sponsors cant start to fund it until it has a reviewer
 	}
+
+	value['currentStageId'] = value.stages[0].id;
 
 	let project = await projectDB.createProject(value);
 
@@ -58,12 +60,12 @@ const updateProject = async (req, res) => {
 		throw error;
 	}
 
-	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['hashtags'] || value['status'] || value['location'] || value['hashtags'] || value['reviewerId'])) {
+	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['hashtags']  || value['location'] || value['hashtags'] || value['reviewerId'] || value['currentStageId'] || value['status'] || value['currentStageId'])) {
 		return apiResponse.badRequest(res, 'at least one field is required to update');
 	}
 
-	if(value['status'] && !Object.values(constants.projectStatus).includes(value['status'])) {
-		return apiResponse.badRequest(res, 'Invalid status. Valid statuses are: ' + Object.values(constants.projectStatus));
+	if(value['status'] && !Object.values(constants.status).includes(value['status'])) {
+		return apiResponse.badRequest(res, 'Invalid status. Valid stage statuses are: ' + Object.values(constants.status));
 	}
 
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
@@ -72,8 +74,7 @@ const updateProject = async (req, res) => {
 		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
-	if (oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
-		value.status = constants.projectStatus.inProgress;
+	if (value['status'] !== constants.status.funding) {
 		metrics.increment('status', 1, ['status:' + value.status]);
 	}
 
@@ -117,10 +118,22 @@ const searchProjects = async (req, res) => {
 	});
 };
 
+const updateProjectStatus = async (req, res) => {
+	let {value, error} = validator.updateProjectStatus(req.body);
+	if(error) {
+		error.name = constants.error.BAD_REQUEST;
+		throw error;
+	}
+	const project = await projectDB.updateProjectStatus(req.params.id, value);
+
+	res.status(200).json(project);
+};
+
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
 	updateProject,
 	searchProjects,
+	updateProjectStatus
 };

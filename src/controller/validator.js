@@ -7,6 +7,7 @@ const createProject = (data) => {
 		category: Joi.string().min(3).max(255).required(),
 		mediaUrls: Joi.array().unique().items(Joi.string()).required(),
 		stages: Joi.array().items(Joi.object({
+			id: Joi.number().greater(0).required(),
 			track: Joi.string().min(3).max(255).required(),
 			targetAmount: Joi.number().greater(0).required()
 		})).required(),
@@ -30,6 +31,7 @@ const updateProject = (data) => {
 		category: Joi.string().min(3).max(255),
 		mediaUrls: Joi.array().unique().items(Joi.string()),
 		status: Joi.string(),
+		currentStageId: Joi.number(),
 		location: Joi.object({
 			x: Joi.number().required(),
 			y: Joi.number().required(),
@@ -55,8 +57,19 @@ const searchProject = (data) => {
 	return schema.validate(data);
 };
 
+const updateProjectStatus = (data) => {
+	const schema = Joi.object({
+		status: Joi.string(),
+		currentStage: Joi.number(),
+		walletId: Joi.number().greater(0)
+	});
+
+	return schema.validate(data);
+};
+
 module.exports = {
 	createProject,
 	updateProject,
-	searchProject
+	searchProject,
+	updateProjectStatus
 };

@@ -3,6 +3,7 @@ const server = require('../src/server');
 let request = supertest(server.app);
 let projectMockRepository = require('../src/repository/projects');
 let authenticationMock = require('../src/client/authentication');
+let constants = require('../src/utils/constants');
 
 jest.mock('../src/client/authentication', () => {
 	return {authenticateToken: jest.fn()};
@@ -45,10 +46,12 @@ describe('POST /api/project', () => {
 			},
 			stages: [
 				{
+					id: 1,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
+					id: 2,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
@@ -75,10 +78,12 @@ describe('POST /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico'],
 			stages: [
 				{
+					id: 1,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
+					id: 2,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
@@ -86,7 +91,7 @@ describe('POST /api/project', () => {
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
 			reviewerId: null,
-			status: 'created',
+			projectStatus: constants.projectStatus.created,
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
@@ -98,7 +103,7 @@ describe('POST /api/project', () => {
 		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.status = 'created';
+		body.projectStatus = constants.projectStatus.created;
 		body.reviewerId = null;
 		body.finishDate = tomorrow;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);

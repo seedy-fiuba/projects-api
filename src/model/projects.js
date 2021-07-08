@@ -21,11 +21,12 @@ let projectSchema = new Schema({
 	description: { type: String, required: true},
 	category: {type: String, required: true},
 	status: {type: String, required: true},
+	currentStageId: {type: Number, required: true},
 	mediaUrls: {type: [String], required: true},
 	stages: {type: [{
+		id: {type: Number, required: true},
 		track: {type: String, required: true},
 		targetAmount: {type: Number, required: true},
-		status: {type: String, required: true},
 	}], required: true},
 	fundedAmount: {type: Number, required: true},
 	location: {
@@ -33,9 +34,10 @@ let projectSchema = new Schema({
 		index: '2dsphere' // Create a special 2dsphere index this is required for $near and $geoNear operator
 	},
 	ownerId: {type: Number, required: true},
-	reviewerId: {type: Number, default: null},
+	reviewerId: {type: Number, required: true},
 	finishDate: {type: Date, required: true},
 	hashtags: {type: [String], required: false},
+	walletId : {type: Number, required: false}
 }, {
 	timestamps: true,
 	_id: false,
