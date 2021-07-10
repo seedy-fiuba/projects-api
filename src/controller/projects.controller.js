@@ -79,6 +79,10 @@ const updateProject = async (req, res) => {
 		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
+	if (value['status'] === constants.status.stagePendingReviewer && oldProject['status'] !== constants.status.inProgress) {
+		return apiResponse.badRequest(res, 'Cannot request stage review if project is not in progress');
+	}
+
 	if (value['status'] !== oldProject['status']) {
 		metrics.increment('status', 1, ['status:' + value.status]);
 	}
