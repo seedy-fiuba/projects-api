@@ -7,14 +7,15 @@ const errorCodes = {
 	INTERNAL_SERVER_ERROR: 'InternalServerError'
 };
 
-const projectStatus = {
+const status = {
 	created: 'created',
 	pendingReviewer: 'pending-reviewer',
+	stagePendingReviewer:'stage-pending-reviewer',
+	funding: 'funding',
 	inProgress: 'in-progress',
-	done: 'done'
+	completed: 'completed'
 };
-
 module.exports = {
 	error: errorCodes,
-	projectStatus: projectStatus
+	status: status
 };

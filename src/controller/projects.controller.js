@@ -33,11 +33,17 @@ const createProject = async (req, res) => {
 	}
 
 	if (value['reviewerId']) {
-		value['status'] = constants.projectStatus.inProgress;
+		value['status'] = constants.status.funding;
 	} else {
 		value['reviewerId'] = null;
-		value['status'] = constants.projectStatus.created;
+		value['status'] = constants.status.created; //project created but sponsors cant start to fund it until it has a reviewer
 	}
+
+	for (let i = 0; i < value.stages.length; i++) {
+		value.stages[i].id = i;
+	}
+
+	value['currentStageId'] = value.stages[0].id;
 
 	let project = await projectDB.createProject(value);
 
@@ -58,12 +64,12 @@ const updateProject = async (req, res) => {
 		throw error;
 	}
 
-	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['hashtags'] || value['status'] || value['location'] || value['hashtags'] || value['reviewerId'])) {
+	if(!(value['title'] || value['description'] || value['category'] || value['mediaUrls'] || value['location'] || value['hashtags'] || value['reviewerId'] || value['currentStageId'] || value['status'] || value['walletId'] || value['missingAmount'])) {
 		return apiResponse.badRequest(res, 'at least one field is required to update');
 	}
 
-	if(value['status'] && !Object.values(constants.projectStatus).includes(value['status'])) {
-		return apiResponse.badRequest(res, 'Invalid status. Valid statuses are: ' + Object.values(constants.projectStatus));
+	if(value['status'] && !Object.values(constants.status).includes(value['status'])) {
+		return apiResponse.badRequest(res, 'Invalid status. Valid stage statuses are: ' + Object.values(constants.status));
 	}
 
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
@@ -72,9 +78,16 @@ const updateProject = async (req, res) => {
 		return apiResponse.notFoundResponse(res, 'inexistent project');
 	}
 
-	if (oldProject['reviewerId'] === 0 && value['reviewerId'] != null) {
-		value.status = constants.projectStatus.inProgress;
+	if (value['status'] === constants.status.stagePendingReviewer && oldProject['status'] !== constants.status.inProgress) {
+		return apiResponse.badRequest(res, 'Cannot request stage review if project is not in progress');
+	}
+
+	if (value['status'] !== oldProject['status']) {
 		metrics.increment('status', 1, ['status:' + value.status]);
+	}
+
+	if (value['missingAmount']) {
+		value['fundedAmount'] = oldProject['totalTargetAmount'] - value['missingAmount'];
 	}
 
 	const project = await projectDB.updateProject(req.params.id, value);
@@ -121,10 +134,12 @@ const searchProjects = async (req, res) => {
 	});
 };
 
+
+
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
 	updateProject,
-	searchProjects,
+	searchProjects
 };

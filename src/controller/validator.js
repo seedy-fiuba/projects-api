@@ -30,12 +30,16 @@ const updateProject = (data) => {
 		category: Joi.string().min(3).max(255),
 		mediaUrls: Joi.array().unique().items(Joi.string()),
 		status: Joi.string(),
+		currentStageId: Joi.number(),
 		location: Joi.object({
 			x: Joi.number().required(),
 			y: Joi.number().required(),
 		}),
 		hashtags: Joi.array().unique().items(Joi.string()),
-		reviewerId: Joi.number().greater(0)
+		reviewerId: Joi.number(),
+		walletId: Joi.number(),
+		missingAmount:  Joi.number(),
+		fundedAmount: Joi.number()
 	});
 
 	return schema.validate(data);
@@ -55,8 +59,20 @@ const searchProject = (data) => {
 	return schema.validate(data);
 };
 
+const createContract = (data) => {
+	const schema = Joi.object({
+		projectId: Joi.number(),
+		funderId: Joi.number().required(),
+		currentFundedAmount: Joi.number().required(),
+		txHash: Joi.string().required()
+	});
+
+	return schema.validate(data);
+};
+
 module.exports = {
 	createProject,
 	updateProject,
-	searchProject
+	searchProject,
+	createContract
 };

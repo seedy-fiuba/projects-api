@@ -30,6 +30,7 @@ const createProject = async (data) => {
 	newProject.description = data.description;
 	newProject.category = data.category;
 	newProject.status = data.status;
+	newProject.currentStageId = data.stages[0].id;
 	newProject.mediaUrls = data.mediaUrls;
 	newProject.fundedAmount = 0.0;
 	newProject.location = {
@@ -37,12 +38,11 @@ const createProject = async (data) => {
 		coordinates: [data.location.x, data.location.y]
 	};
 	newProject.hashtags = data.hashtags;
-	data.stages.forEach(e => e.status = 'pending');
 	newProject.stages = data.stages;
 	newProject.ownerId = data.ownerId;
 	newProject.reviewerId = data.reviewerId;
 	newProject.finishDate = data.finishDate;
-
+	newProject.totalTargetAmount = data.stages.map(s => s.targetAmount).reduce((acum, v) => acum + v);
 	console.log(newProject);
 
 	let savedProject = await newProject.save();
