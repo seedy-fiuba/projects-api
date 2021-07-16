@@ -464,8 +464,12 @@ describe('search projects', () => {
 				fail('missing status in query');
 			}
 
-			if (query['status'] !== 'pending') {
-				fail('unexpected status: ' + query['status']);
+			if (!query['status']['$in']) {
+				fail('missing "$in" in operator in query');
+			}
+
+			if (query['status']['$in'] !== 'pending') {
+				fail('unexpected value in status query ' + query['status']['$in']);
 			}
 
 			return projectDoc;
