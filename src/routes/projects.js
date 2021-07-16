@@ -10,5 +10,6 @@ router.get('/project/:id', projectController.getProjectByid);
 router.post('/project', projectController.createProject);
 router.put('/project/:id', projectController.updateProject);
 router.post('/project/:id/fund', contractController.createContract);
+router.get('/contracts', contractController.getContracts);
 
 module.exports = router;

@@ -71,10 +71,23 @@ const createContract = async (data) => {
 	return savedContract;
 };
 
+const getContracts = async (params) => {
+	const limit = params.size ? + params.size : 10;
+	const offset = params.page ? params.page * limit : 0;
+	let query = {};
+
+	if (params.funderId) {
+		query.funderId = params.funderId;
+	}
+
+	return Contract.paginate(query, {offset: offset, limit: limit});
+};
+
 module.exports = {
 	getProject,
 	getProjectByid,
 	createProject,
 	updateProject,
-	createContract
+	createContract,
+	getContracts
 };
