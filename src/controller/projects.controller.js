@@ -110,6 +110,10 @@ const searchProjects = async (req, res) => {
 		value['category'] = value['category'].split(',');
 	}
 
+	if(value['status']) {
+		value['status'] = value['status'].split(',');
+	}
+
 	if(value['hashtags']) {
 		value['hashtags'] = value['hashtags'].split(',');
 	}

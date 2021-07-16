@@ -84,7 +84,7 @@ const searchProjects = async (queryValues) => {
 	}
 
 	if (queryValues['status']) {
-		query['status'] =  queryValues.status;
+		query['status'] =  {$in: queryValues.status};
 	}
 
 	if (queryValues['ownerId']) {
