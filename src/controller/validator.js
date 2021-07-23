@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const constants = require('../utils/constants');
 
 const createProject = (data) => {
 	const schema = Joi.object({
@@ -47,7 +48,7 @@ const updateProject = (data) => {
 
 const searchProject = (data) => {
 	const schema = Joi.object({
-		status: Joi.string().min(3).max(255), //ToDo aca solo se deberian poder buscar status discretos
+		status: Joi.string().valid(constants.status.created, constants.status.funding, constants.status.inProgress, constants.status.stagePendingReviewer, constants.status.pendingReviewer. constants.status.completed),
 		category: Joi.string().min(3).max(255),
 		locationX: Joi.number(),
 		locationY: Joi.number(),

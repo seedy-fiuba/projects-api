@@ -15,7 +15,15 @@ const status = {
 	inProgress: 'in-progress',
 	completed: 'completed'
 };
+
+const titles = {
+	created: 'Project created',
+	updated: 'Project updated',
+
+};
+
 module.exports = {
 	error: errorCodes,
-	status: status
+	status: status,
+	titles: titles
 };

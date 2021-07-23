@@ -1,4 +1,5 @@
 let projectDB = require('../repository/projects');
+let notificationsDB = require('../repository/notifications');
 const validator = require('./validator');
 const constants = require('../utils/constants');
 const ControllerError = require('../exceptions/ControllerError');
@@ -54,6 +55,14 @@ const createProject = async (req, res) => {
 	console.log(avgProjects[0]);
 	metrics.gauge('avgPerUser', avgProjects[0]['projectAvgByUser']);
 
+	const body = {
+		'title': constants.titles.created,
+		'message': 'Hi! Your project' + project['title'] + ' has been created. Current status: ' + project['status'],
+		'ownerId' : project['ownerId'],
+		'projectId' : project['_id']
+	};
+
+	await notificationsDB.sendNotification(body);
 	res.status(200).json(project);
 };
 
@@ -92,6 +101,14 @@ const updateProject = async (req, res) => {
 
 	const project = await projectDB.updateProject(req.params.id, value);
 
+	const body = {
+		'title': constants.titles.updated,
+		'message': 'Hi! Your project ' + project['title'] + ' has been updated. Go check the latest changes!',
+		'ownerId' : project['ownerId'],
+		'projectId' : project['_id']
+	};
+
+	await notificationsDB.sendNotification(body);
 	res.status(200).json(project);
 };
 
