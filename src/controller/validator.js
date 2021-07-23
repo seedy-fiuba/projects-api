@@ -48,7 +48,7 @@ const updateProject = (data) => {
 
 const searchProject = (data) => {
 	const schema = Joi.object({
-		status: Joi.string().valid(constants.status.created, constants.status.funding, constants.status.inProgress, constants.status.stagePendingReviewer, constants.status.pendingReviewer. constants.status.completed),
+		status: Joi.string().valid(constants.status.created, constants.status.funding, constants.status.inProgress, constants.status.stagePendingReviewer, constants.status.pendingReviewer, constants.status.completed),
 		category: Joi.string().min(3).max(255),
 		locationX: Joi.number(),
 		locationY: Joi.number(),
