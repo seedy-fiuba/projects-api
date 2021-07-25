@@ -70,9 +70,19 @@ const createContract = (data) => {
 	return schema.validate(data);
 };
 
+const searchContractsValidator = (data) => {
+	const schema = Joi.object({
+		'size': Joi.number(),
+		'page': Joi.number(),
+		'funderId': Joi.number()
+	});
+	return schema.validate(data);
+};
+
 module.exports = {
 	createProject,
 	updateProject,
 	searchProject,
-	createContract
+	createContract,
+	searchContractsValidator
 };
