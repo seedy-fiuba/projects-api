@@ -8,9 +8,7 @@ const sendNotification = async (body) => {
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		data : JSON.stringify({
-			body
-		})
+		data : JSON.stringify(body)
 	};
 
 	return axios(config).then((response) => {
