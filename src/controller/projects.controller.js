@@ -57,7 +57,7 @@ const createProject = async (req, res) => {
 
 	const body = {
 		'title': constants.titles.created,
-		'message': 'Hi! Your project' + project['title'] + ' has been created. Current status: ' + project['status'],
+		'message': 'Hola! Tu proyecto' + project['title'] + ' fue creado. Estado actual: ' + project['status'],
 		'ownerId' : project['ownerId'],
 		'projectId' : project['_id']
 	};
@@ -103,7 +103,7 @@ const updateProject = async (req, res) => {
 
 	const body = {
 		'title': constants.titles.updated,
-		'message': 'Hi! Your project ' + project['title'] + ' has been updated. Go check the latest changes!',
+		'message': 'Hola! Tu proyecto ' + project['title'] + ' fue actualizado. Ya podes ir a ver los cambios en su detalle',
 		'ownerId' : project['ownerId'],
 		'projectId' : project['_id']
 	};
