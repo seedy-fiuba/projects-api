@@ -17,8 +17,8 @@ const status = {
 };
 
 const titles = {
-	created: 'Project created',
-	updated: 'Project updated',
+	created: 'Proyecto creado',
+	updated: 'Proyecto actualizado',
 
 };
 
