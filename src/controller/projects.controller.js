@@ -72,6 +72,10 @@ const updateProject = async (req, res) => {
 		return apiResponse.badRequest(res, 'Invalid status. Valid stage statuses are: ' + Object.values(constants.status));
 	}
 
+	if(value['status'] == constants.status.blocked && req.header('X-Admin') == null) {
+		return apiResponse.unauthorizedResponse(res, "don't have enough permission to change status to blocked");
+	}
+
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
 	let oldProject = await projectDB.getProjectByid(req.params.id);
 	if (!oldProject) {
@@ -126,7 +130,11 @@ const searchProjects = async (req, res) => {
 		return apiResponse.badRequest(res, 'locationX and locationY are needed for location search');
 	}
 
-	let response = await projectDB.searchProjects(value);
+	let response = await projectDB.searchProjects(value, );
+
+	if (req.header('X-Admin') == null) {
+		response = response.filter(p => p.status != constants.status.blocked)
+	}
 
 	res.status(200).json({
 		size: response.length,

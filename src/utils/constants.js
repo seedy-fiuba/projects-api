@@ -13,8 +13,10 @@ const status = {
 	stagePendingReviewer:'stage-pending-reviewer',
 	funding: 'funding',
 	inProgress: 'in-progress',
-	completed: 'completed'
+	completed: 'completed',
+	blocked: 'blocked'
 };
+
 module.exports = {
 	error: errorCodes,
 	status: status
