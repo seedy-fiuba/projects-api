@@ -46,12 +46,10 @@ describe('POST /api/project', () => {
 			},
 			stages: [
 				{
-					id: 1,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					id: 2,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
@@ -66,6 +64,7 @@ describe('POST /api/project', () => {
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
+			currentStageId: 0,
 			mediaUrls: ['foto/fachera'],
 			fundedAmount: 0.0,
 			location: {
@@ -78,20 +77,19 @@ describe('POST /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico'],
 			stages: [
 				{
-					id: 1,
+					id: 0,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					id: 2,
+					id: 1,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
-			reviewerId: null,
-			projectStatus: constants.projectStatus.created,
+			reviewerId: null
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
@@ -103,9 +101,12 @@ describe('POST /api/project', () => {
 		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.projectStatus = constants.projectStatus.created;
+		body.status = constants.status.created;
 		body.reviewerId = null;
 		body.finishDate = tomorrow;
+		body.currentStageId = 0;
+		body.stages[0].id = 0;
+		body.stages[1].id = 1;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -189,6 +190,9 @@ describe('POST /api/project', () => {
 		body.reviewerId = null;
 		body.ownerId = 555;
 		body.finishDate = tomorrow;
+		body.currentStageId = 0;
+		body.stages[0].id = 0;
+		body.stages[1].id = 1;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -269,9 +273,12 @@ describe('POST /api/project', () => {
 		expect(authenticationMock.authenticateToken.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.status = 'in-progress';
+		body.status = 'funding';
 		body.ownerId = 555;
 		body.finishDate = tomorrow;
+		body.currentStageId = 0;
+		body.stages[0].id = 0;
+		body.stages[1].id = 1;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -446,7 +453,6 @@ describe('PUT /api/project/{projectId}', () => {
 		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
 
-		body.status = 'in-progress';
 		expect(projectMockRepository.updateProject.mock.calls[0][1]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(projectUpdated);
@@ -656,12 +662,12 @@ describe('GET /api/project/search', () => {
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
 
 		const res = await request.get('/api/project/search').set('X-Override-Token','true').query({
-			status: 'pending'
+			status: 'in-progress'
 		});
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: ['pending']
+			status: ['in-progress']
 		});
 
 		expect(res.status).toBe(200);
@@ -679,7 +685,7 @@ describe('GET /api/project/search', () => {
 			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
-			status: 'pending',
+			status: 'pending-reviewer',
 			location: {
 				coordinates: [
 					-34.610955,
@@ -697,13 +703,13 @@ describe('GET /api/project/search', () => {
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc, projectDoc2]);
 
 		const res = await request.get('/api/project/search').set('X-Override-Token','true').query({
-			status: 'pending',
+			status: 'pending-reviewer',
 			hashtags: 'gamer,rgb'
 		});
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: ['pending'],
+			status: ['pending-reviewer'],
 			hashtags: ['gamer', 'rgb']
 		});
 
