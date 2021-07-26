@@ -480,6 +480,19 @@ describe('PUT /api/project/{projectId}', () => {
 
 	});
 
+	test('block project id 456 fails due to not enough permission', async () => {
+
+		let body = {
+			status: constants.status.blocked
+		};
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
+
+		expect(res.status).toBe(401);
+		expect(res.text).toContain('don\'t have enough permission to change status to blocked');
+
+	});
+
 	test('fail update with empty body', async () => {
 
 		let body = {};
@@ -669,7 +682,7 @@ describe('GET /api/project/search', () => {
 		expect(res.body['results'][0]).toStrictEqual(projectDoc);
 	});
 
-	test('search by multiple criteria', async () => {
+	test('search by multiple criteria, show blocked projects because X-Admin', async () => {
 
 		let projectDoc = {
 			_id: 123,
@@ -693,6 +706,51 @@ describe('GET /api/project/search', () => {
 		var projectDoc2 = JSON.parse(JSON.stringify(projectDoc));
 		projectDoc2._id = 345;
 		projectDoc2.title = 'boquita';
+		projectDoc2.title = constants.status.blocked;
+
+		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc, projectDoc2]);
+
+		const res = await request.get('/api/project/search').set('X-Override-Token','true').set('X-Admin','true').query({
+			status: 'pending',
+			hashtags: 'gamer,rgb'
+		});
+
+		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
+		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
+			status: ['pending'],
+			hashtags: ['gamer', 'rgb']
+		});
+
+		expect(res.status).toBe(200);
+		expect(res.body['size']).toBe(2);
+		expect(res.body['results']).toStrictEqual([projectDoc, projectDoc2]);
+	});
+
+	test('search by multiple criteria, does not show blocked projects', async () => {
+
+		let projectDoc = {
+			_id: 123,
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			status: 'pending',
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico']
+		};
+
+		var projectDoc2 = JSON.parse(JSON.stringify(projectDoc));
+		projectDoc2._id = 345;
+		projectDoc2.title = 'boquita';
+		projectDoc2.status = constants.status.blocked
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc, projectDoc2]);
 
@@ -708,8 +766,8 @@ describe('GET /api/project/search', () => {
 		});
 
 		expect(res.status).toBe(200);
-		expect(res.body['size']).toBe(2);
-		expect(res.body['results']).toStrictEqual([projectDoc, projectDoc2]);
+		expect(res.body['size']).toBe(1);
+		expect(res.body['results']).toStrictEqual([projectDoc]);
 	});
 
 	test('search by category not found', async () => {
