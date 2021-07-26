@@ -144,7 +144,7 @@ const searchProjects = async (req, res) => {
 		return apiResponse.badRequest(res, 'locationX and locationY are needed for location search');
 	}
 
-	let response = await projectDB.searchProjects(value, );
+	let response = await projectDB.searchProjects(value);
 
 	if (req.header('X-Admin') == null) {
 		response = response.filter(p => p.isBlocked == false)
