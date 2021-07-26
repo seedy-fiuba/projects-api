@@ -14,7 +14,8 @@ const status = {
 	funding: 'funding',
 	inProgress: 'in-progress',
 	completed: 'completed',
-	blocked: 'blocked'
+	blocked: 'blocked',
+	unblocked: 'unblocked'
 };
 
 module.exports = {

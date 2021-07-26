@@ -38,7 +38,8 @@ let projectSchema = new Schema({
 	finishDate: {type: Date, required: true},
 	hashtags: {type: [String], required: false},
 	walletId : {type: Number, required: false},
-	totalTargetAmount : {type: Number, required: false}
+	totalTargetAmount : {type: Number, required: false},
+	isBlocked: {type: Boolean, default: false, required: false}
 }, {
 	timestamps: true,
 	_id: false,

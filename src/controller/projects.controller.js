@@ -72,8 +72,22 @@ const updateProject = async (req, res) => {
 		return apiResponse.badRequest(res, 'Invalid status. Valid stage statuses are: ' + Object.values(constants.status));
 	}
 
-	if(value['status'] == constants.status.blocked && req.header('X-Admin') == null) {
-		return apiResponse.unauthorizedResponse(res, "don't have enough permission to change status to blocked");
+	if(value['status'] == constants.status.blocked) {
+		if (req.header('X-Admin') == null) {
+			return apiResponse.unauthorizedResponse(res, "don't have enough permission to change status to blocked");
+		}
+
+		delete value.status
+		value.isBlocked = true
+	}
+
+	if(value['status'] == constants.status.unblocked) {
+		if (req.header('X-Admin') == null) {
+			return apiResponse.unauthorizedResponse(res, "don't have enough permission to change status to blocked");
+		}
+
+		delete value.status
+		value.isBlocked = false
 	}
 
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
@@ -133,7 +147,7 @@ const searchProjects = async (req, res) => {
 	let response = await projectDB.searchProjects(value, );
 
 	if (req.header('X-Admin') == null) {
-		response = response.filter(p => p.status != constants.status.blocked)
+		response = response.filter(p => p.isBlocked == false)
 	}
 
 	res.status(200).json({
