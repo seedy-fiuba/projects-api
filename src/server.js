@@ -8,6 +8,9 @@ const authentication = require('./client/authentication');
 const cors = require('cors');
 require('express-async-errors'); // This is for catching errors from controllers and handle them in the next(), without using the next() keyword in the controllers
 
+const swaggerUi = require('swagger-ui-express'),
+	swaggerDocument = require('../openapi.json');
+
 // DB postgre config
 const { Client } = require('pg');
 
@@ -35,7 +38,7 @@ app.use(async (req, res, next) => {
 	let token = req.header('X-Auth-Token');
 	let override = req.header('X-Override-Token');
 
-	if(override) {
+	if(override || req.path.includes('docs')) {
 		next();
 		return;
 	}
@@ -105,6 +108,12 @@ app.use((err, req, res, next) => {
 
 	next();
 });
+
+app.use(
+	'/docs',
+	swaggerUi.serve,
+	swaggerUi.setup(swaggerDocument)
+);
 
 module.exports = {
 	app: app,
