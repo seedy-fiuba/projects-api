@@ -1,4 +1,5 @@
 let projectDB = require('../repository/projects');
+let notificationsDB = require('../repository/notifications');
 const validator = require('./validator');
 const constants = require('../utils/constants');
 const ControllerError = require('../exceptions/ControllerError');
@@ -54,6 +55,14 @@ const createProject = async (req, res) => {
 	console.log(avgProjects[0]);
 	metrics.gauge('avgPerUser', avgProjects[0]['projectAvgByUser']);
 
+	const body = {
+		'title': constants.titles.created,
+		'message': 'Hola! Tu proyecto' + project['title'] + ' fue creado. Estado actual: ' + project['status'],
+		'ownerId' : project['ownerId'],
+		'projectId' : project['_id']
+	};
+
+	await notificationsDB.sendNotification(body);
 	res.status(200).json(project);
 };
 
@@ -70,6 +79,24 @@ const updateProject = async (req, res) => {
 
 	if(value['status'] && !Object.values(constants.status).includes(value['status'])) {
 		return apiResponse.badRequest(res, 'Invalid status. Valid stage statuses are: ' + Object.values(constants.status));
+	}
+
+	if(value['status'] == constants.status.blocked) {
+		if (req.header('X-Admin') == null) {
+			return apiResponse.unauthorizedResponse(res, 'don\'t have enough permission to change status to blocked');
+		}
+
+		delete value.status;
+		value.isBlocked = true;
+	}
+
+	if(value['status'] == constants.status.unblocked) {
+		if (req.header('X-Admin') == null) {
+			return apiResponse.unauthorizedResponse(res, 'don\'t have enough permission to change status to blocked');
+		}
+
+		delete value.status;
+		value.isBlocked = false;
 	}
 
 	// If a reviewerId is set, then change the status of the project to inProgress so it can start to receive funds
@@ -92,6 +119,14 @@ const updateProject = async (req, res) => {
 
 	const project = await projectDB.updateProject(req.params.id, value);
 
+	const body = {
+		'title': constants.titles.updated,
+		'message': 'Hola! Tu proyecto ' + project['title'] + ' fue actualizado. Ya podes ir a ver los cambios en su detalle',
+		'ownerId' : project['ownerId'],
+		'projectId' : project['_id']
+	};
+
+	await notificationsDB.sendNotification(body);
 	res.status(200).json(project);
 };
 
@@ -127,6 +162,10 @@ const searchProjects = async (req, res) => {
 	}
 
 	let response = await projectDB.searchProjects(value);
+
+	if (req.header('X-Admin') == null) {
+		response = response.filter(p => p.isBlocked == false);
+	}
 
 	res.status(200).json({
 		size: response.length,

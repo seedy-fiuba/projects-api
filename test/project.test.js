@@ -46,12 +46,10 @@ describe('POST /api/project', () => {
 			},
 			stages: [
 				{
-					id: 1,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					id: 2,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
@@ -66,6 +64,7 @@ describe('POST /api/project', () => {
 			title: 'pad gamer',
 			description: 'teclado gamer rgb con muchas luces',
 			category: 'gamer',
+			currentStageId: 0,
 			mediaUrls: ['foto/fachera'],
 			fundedAmount: 0.0,
 			location: {
@@ -78,20 +77,19 @@ describe('POST /api/project', () => {
 			hashtags: ['gamer', 'rgb', 'mecanico'],
 			stages: [
 				{
-					id: 1,
+					id: 0,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
-					id: 2,
+					id: 1,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
 			],
 			finishDate: tomorrow.toISOString(),
 			ownerId: 234,
-			reviewerId: null,
-			projectStatus: constants.projectStatus.created,
+			reviewerId: null
 		};
 
 		projectMockRepository.createProject.mockReturnValueOnce(doc);
@@ -103,9 +101,12 @@ describe('POST /api/project', () => {
 		expect(projectMockRepository.getAvgProjectsByUser.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.projectStatus = constants.projectStatus.created;
+		body.status = constants.status.created;
 		body.reviewerId = null;
 		body.finishDate = tomorrow;
+		body.currentStageId = 0;
+		body.stages[0].id = 0;
+		body.stages[1].id = 1;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -135,6 +136,7 @@ describe('POST /api/project', () => {
 				}
 			],
 			finishDate: tomorrow.toISOString(),
+			ownerId: 555,
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
@@ -189,6 +191,9 @@ describe('POST /api/project', () => {
 		body.reviewerId = null;
 		body.ownerId = 555;
 		body.finishDate = tomorrow;
+		body.currentStageId = 0;
+		body.stages[0].id = 0;
+		body.stages[1].id = 1;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -219,6 +224,7 @@ describe('POST /api/project', () => {
 			],
 			reviewerId: 223,
 			finishDate: tomorrow.toISOString(),
+			ownerId: 555,
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
@@ -269,9 +275,12 @@ describe('POST /api/project', () => {
 		expect(authenticationMock.authenticateToken.mock.calls.length).toBe(1);
 
 		// payload for project creation
-		body.status = 'in-progress';
+		body.status = 'funding';
 		body.ownerId = 555;
 		body.finishDate = tomorrow;
+		body.currentStageId = 0;
+		body.stages[0].id = 0;
+		body.stages[1].id = 1;
 		expect(projectMockRepository.createProject.mock.calls[0][0]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(doc);
@@ -381,6 +390,7 @@ describe('PUT /api/project/{projectId}', () => {
 		projectMockRepository.getProjectByid.mockReturnValueOnce(oldProject);
 		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
 
+		jest.setTimeout(90 * 1000);
 		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
 
 		expect(projectMockRepository.getProjectByid.mock.calls.length).toBe(1);
@@ -446,7 +456,6 @@ describe('PUT /api/project/{projectId}', () => {
 		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
 		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
 
-		body.status = 'in-progress';
 		expect(projectMockRepository.updateProject.mock.calls[0][1]).toStrictEqual(body);
 		expect(res.status).toBe(200);
 		expect(res.body).toStrictEqual(projectUpdated);
@@ -478,6 +487,159 @@ describe('PUT /api/project/{projectId}', () => {
 		expect(res.status).toBe(500);
 		expect(res.text).toContain('database unavailable');
 
+	});
+
+	test('block project id 456 fails due to not enough permission', async () => {
+
+		let body = {
+			status: 'blocked'
+		};
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
+
+		expect(res.status).toBe(401);
+		expect(res.text).toContain('don\'t have enough permission to change status to blocked');
+
+	});
+
+	test('unblock project id 456 fails due to not enough permission', async () => {
+
+		let body = {
+			status: 'unblocked'
+		};
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
+
+		expect(res.status).toBe(401);
+		expect(res.text).toContain('don\'t have enough permission to change status to blocked');
+	});
+
+	test('block project id 456', async () => {
+
+		let body = {
+			status: 'blocked'
+		};
+
+		let oldProject = {
+			_id: 123,
+			title: 'pad gamer re loco',
+			description: 'teclado gamer rgb con pocas luces',
+			category: 'rgb',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			status: 'created',
+			reviewerId: 0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
+		};
+
+		let projectUpdated = {
+			_id: 123,
+			title: 'pad gamer re loco',
+			description: 'teclado gamer rgb con pocas luces',
+			category: 'rgb',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			reviewerId: 2342,
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: true
+		};
+
+		projectMockRepository.getProjectByid.mockReturnValueOnce(oldProject);
+		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').set('X-Admin','true').send(body);
+
+		expect(projectMockRepository.getProjectByid.mock.calls.length).toBe(1);
+		expect(projectMockRepository.getProjectByid.mock.calls[0][0]).toBe('456');
+		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
+		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
+
+		delete body.status;
+		body.isBlocked = true;
+		expect(projectMockRepository.updateProject.mock.calls[0][1]).toStrictEqual(body);
+		expect(res.status).toBe(200);
+		expect(res.body).toStrictEqual(projectUpdated);
+	});
+
+	test('unblock project id 456', async () => {
+
+		let body = {
+			status: 'unblocked'
+		};
+
+		let oldProject = {
+			_id: 123,
+			title: 'pad gamer re loco',
+			description: 'teclado gamer rgb con pocas luces',
+			category: 'rgb',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			status: 'created',
+			reviewerId: 0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: true
+		};
+
+		let projectUpdated = {
+			_id: 123,
+			title: 'pad gamer re loco',
+			description: 'teclado gamer rgb con pocas luces',
+			category: 'rgb',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			reviewerId: 2342,
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
+		};
+
+		projectMockRepository.getProjectByid.mockReturnValueOnce(oldProject);
+		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
+
+		const res = await request.put('/api/project/456').set('X-Override-Token','true').set('X-Admin','true').send(body);
+
+		expect(projectMockRepository.getProjectByid.mock.calls.length).toBe(1);
+		expect(projectMockRepository.getProjectByid.mock.calls[0][0]).toBe('456');
+		expect(projectMockRepository.updateProject.mock.calls.length).toBe(1);
+		expect(projectMockRepository.updateProject.mock.calls[0][0]).toBe('456');
+
+		delete body.status;
+		body.isBlocked = false;
+		expect(projectMockRepository.updateProject.mock.calls[0][1]).toStrictEqual(body);
+		expect(res.status).toBe(200);
+		expect(res.body).toStrictEqual(projectUpdated);
 	});
 
 	test('fail update with empty body', async () => {
@@ -518,6 +680,7 @@ describe('GET /api/project/search', () => {
 			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
+			status: 'pending-reviewer',
 			location: {
 				coordinates: [
 					-34.610955,
@@ -525,7 +688,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -563,7 +727,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -599,7 +764,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -650,18 +816,19 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
 
 		const res = await request.get('/api/project/search').set('X-Override-Token','true').query({
-			status: 'pending'
+			status: 'in-progress'
 		});
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: ['pending']
+			status: ['in-progress']
 		});
 
 		expect(res.status).toBe(200);
@@ -669,7 +836,7 @@ describe('GET /api/project/search', () => {
 		expect(res.body['results'][0]).toStrictEqual(projectDoc);
 	});
 
-	test('search by multiple criteria', async () => {
+	test('search by multiple criteria, show blocked projects because X-Admin', async () => {
 
 		let projectDoc = {
 			_id: 123,
@@ -679,7 +846,7 @@ describe('GET /api/project/search', () => {
 			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
-			status: 'pending',
+			status: 'pending-reviewer',
 			location: {
 				coordinates: [
 					-34.610955,
@@ -687,29 +854,76 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		var projectDoc2 = JSON.parse(JSON.stringify(projectDoc));
 		projectDoc2._id = 345;
 		projectDoc2.title = 'boquita';
+		projectDoc2.title = constants.status.blocked;
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc, projectDoc2]);
 
 		const res = await request.get('/api/project/search').set('X-Override-Token','true').query({
-			status: 'pending',
+			status: 'pending-reviewer',
 			hashtags: 'gamer,rgb'
 		});
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: ['pending'],
+			status: ['pending-reviewer'],
 			hashtags: ['gamer', 'rgb']
 		});
 
 		expect(res.status).toBe(200);
 		expect(res.body['size']).toBe(2);
 		expect(res.body['results']).toStrictEqual([projectDoc, projectDoc2]);
+	});
+
+	test('search by multiple criteria, does not show blocked projects', async () => {
+
+		let projectDoc = {
+			_id: 123,
+			title: 'pad gamer',
+			description: 'teclado gamer rgb con muchas luces',
+			category: 'gamer',
+			mediaUrls: ['foto/fachera'],
+			targetAmount: 123.22,
+			fundedAmount: 0.0,
+			status: 'created',
+			location: {
+				coordinates: [
+					-34.610955,
+					-58.436967
+				],
+				type: 'Point'
+			},
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
+		};
+
+		var projectDoc2 = JSON.parse(JSON.stringify(projectDoc));
+		projectDoc2._id = 345;
+		projectDoc2.title = 'boquita';
+		projectDoc2.isBlocked = true;
+
+		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc, projectDoc2]);
+
+		const res = await request.get('/api/project/search').set('X-Override-Token','true').query({
+			status: 'created',
+			hashtags: 'gamer,rgb'
+		});
+
+		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
+		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
+			status: ['created'],
+			hashtags: ['gamer', 'rgb']
+		});
+
+		expect(res.status).toBe(200);
+		expect(res.body['size']).toBe(1);
+		expect(res.body['results']).toStrictEqual([projectDoc]);
 	});
 
 	test('search by category not found', async () => {

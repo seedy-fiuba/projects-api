@@ -1,0 +1,913 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Projects API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/project": {
+      "get": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Get All Projects",
+        "operationId": "get_projects",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Projects Projects Get",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Create Project",
+        "operationId": "create_project",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjectPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/project/search": {
+      "get": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Search Projects",
+        "operationId": "search_projects",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Status",
+              "type": "string"
+            },
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Category",
+              "type": "string"
+            },
+            "name": "category",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Locationx",
+              "type": "string"
+            },
+            "name": "locationX",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Locationy",
+              "type": "string"
+            },
+            "name": "locationY",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Ownerid",
+              "type": "string"
+            },
+            "name": "ownerId",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Hashtags",
+              "type": "string"
+            },
+            "name": "hashtags",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Id",
+              "type": "string"
+            },
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectPaginatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/project/{project_id}": {
+      "get": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Get Project By Id",
+        "operationId": "get_project_by_id",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            },
+            "name": "project_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Update Project",
+        "operationId": "update_project_by_id",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            },
+            "name": "project_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjectPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/project/{project_id}/fund": {
+      "post": {
+        "tags": [
+          "projects"
+        ],
+        "summary": "Fund Project",
+        "operationId": "fund_project",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Id",
+              "type": "integer"
+            },
+            "name": "project_id",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FundProjectPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts": {
+      "get": {
+        "tags": [
+          "contracts"
+        ],
+        "summary": "Get Contracts",
+        "operationId": "get_contracts_contracts_get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Funderid",
+              "type": "string"
+            },
+            "name": "funderId",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Size",
+              "type": "string"
+            },
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "type": "string"
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "X-Auth-Token",
+              "type": "string"
+            },
+            "name": "x-auth-token",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractProjectSearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Seedy Fiuba",
+        "operationId": "hello_world__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AcceptStagePayload": {
+        "title": "AcceptStagePayload",
+        "required": [
+          "reviewerId"
+        ],
+        "type": "object",
+        "properties": {
+          "reviewerId": {
+            "title": "Reviewerid",
+            "type": "integer"
+          }
+        }
+      },
+      "Contract": {
+        "title": "Contract",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "title": "Projectid",
+            "type": "integer"
+          },
+          "funderId": {
+            "title": "Funderid",
+            "type": "integer"
+          },
+          "currentFundedAmount": {
+            "title": "Currentfundedamount",
+            "type": "number"
+          },
+          "txHash": {
+            "title": "Txhash",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        }
+      },
+      "ContractProjectSearchResponse": {
+        "title": "ContractProjectSearchResponse",
+        "required": [
+          "totalItems",
+          "results",
+          "totalPages",
+          "currentPage"
+        ],
+        "type": "object",
+        "properties": {
+          "totalItems": {
+            "title": "Totalitems",
+            "type": "integer"
+          },
+          "results": {
+            "title": "Results",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractResponseModel"
+            }
+          },
+          "totalPages": {
+            "title": "Totalpages",
+            "type": "integer"
+          },
+          "currentPage": {
+            "title": "Currentpage",
+            "type": "integer"
+          }
+        }
+      },
+      "ContractResponseModel": {
+        "title": "ContractResponseModel",
+        "required": [
+          "contract"
+        ],
+        "type": "object",
+        "properties": {
+          "project": {
+            "$ref": "#/components/schemas/Project"
+          },
+          "contract": {
+            "$ref": "#/components/schemas/Contract"
+          }
+        }
+      },
+      "CreateProjectLocationPayload": {
+        "title": "CreateProjectLocationPayload",
+        "required": [
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "x": {
+            "title": "X",
+            "type": "number"
+          },
+          "y": {
+            "title": "Y",
+            "type": "number"
+          }
+        }
+      },
+      "CreateProjectPayload": {
+        "title": "CreateProjectPayload",
+        "required": [
+          "title",
+          "description",
+          "category",
+          "mediaUrls",
+          "stages",
+          "location",
+          "hashtags",
+          "finishDate"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "mediaUrls": {
+            "title": "Mediaurls",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "stages": {
+            "title": "Stages",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateProjectStagePayload"
+            }
+          },
+          "location": {
+            "$ref": "#/components/schemas/CreateProjectLocationPayload"
+          },
+          "hashtags": {
+            "title": "Hashtags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ownerId": {
+            "title": "Ownerid",
+            "type": "integer"
+          },
+          "reviewerId": {
+            "title": "Reviewerid",
+            "type": "integer"
+          },
+          "finishDate": {
+            "title": "Finishdate",
+            "type": "string"
+          }
+        }
+      },
+      "CreateProjectStagePayload": {
+        "title": "CreateProjectStagePayload",
+        "required": [
+          "track",
+          "targetAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "track": {
+            "title": "Track",
+            "type": "string"
+          },
+          "targetAmount": {
+            "title": "Targetamount",
+            "type": "number"
+          }
+        }
+      },
+      "FundProjectPayload": {
+        "title": "FundProjectPayload",
+        "required": [
+          "funderId",
+          "currentFundedAmount",
+          "txHash"
+        ],
+        "type": "object",
+        "properties": {
+          "funderId": {
+            "title": "Funderid",
+            "type": "integer"
+          },
+          "currentFundedAmount": {
+            "title": "CurrentFundedAmount",
+            "type": "number"
+          },
+          "txHash": {
+            "title": "TxHash",
+            "type": "string"
+          }
+        }
+      },
+      "Project": {
+        "title": "Project",
+        "type": "object",
+        "properties": {
+          "mediaUrls": {
+            "title": "Mediaurls",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "hashtags": {
+            "title": "Hashtags",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "stages": {
+            "title": "Stages",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectStage"
+            },
+            "default": []
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "fundedAmount": {
+            "title": "Fundedamount",
+            "type": "number"
+          },
+          "location": {
+            "$ref": "#/components/schemas/ProjectLocation"
+          },
+          "ownerId": {
+            "title": "Ownerid",
+            "type": "integer"
+          },
+          "reviewerId": {
+            "title": "Reviewerid",
+            "type": "integer"
+          },
+          "walletId": {
+            "title": "Walletid",
+            "type": "integer"
+          },
+          "currentStageId": {
+            "title": "Currentstageid",
+            "type": "integer"
+          },
+          "finishDate": {
+            "title": "Finishdate",
+            "type": "string"
+          },
+          "totalTargetAmount": {
+            "title": "TotalTargetAmount",
+            "type": "number"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        }
+      },
+      "ProjectLocation": {
+        "title": "ProjectLocation",
+        "required": [
+          "coordinates",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "coordinates": {
+            "title": "Coordinates",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        }
+      },
+      "ProjectPaginatedResponse": {
+        "title": "ProjectPaginatedResponse",
+        "required": [
+          "size"
+        ],
+        "type": "object",
+        "properties": {
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          },
+          "results": {
+            "title": "Results",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Project"
+            },
+            "default": []
+          }
+        }
+      },
+      "ProjectStage": {
+        "title": "ProjectStage",
+        "type": "object",
+        "properties": {
+          "track": {
+            "title": "Track",
+            "type": "string"
+          },
+          "targetAmount": {
+            "title": "Targetamount",
+            "type": "number"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          }
+        }
+      },
+      "Status": {
+        "title": "Status",
+        "enum": [
+          "pending-reviewer",
+          "stage-pending-reviewer",
+          "in-progress",
+          "created",
+          "funding",
+          "completed"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "TransferFundsPayload": {
+        "title": "TransferFundsPayload",
+        "required": [
+          "destinationAddress",
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "destinationAddress": {
+            "title": "Destinationaddress",
+            "type": "string"
+          },
+          "amount": {
+            "title": "Amount",
+            "type": "number"
+          }
+        }
+      },
+      "UpdateProjectPayload": {
+        "title": "UpdateProjectPayload",
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "currentStageId": {
+            "title": "Currentstageid",
+            "type": "integer"
+          },
+          "walletId": {
+            "title": "Walletid",
+            "type": "integer"
+          },
+          "reviewerId": {
+            "title": "Reviewerid",
+            "type": "integer"
+          },
+          "missingAmount": {
+            "title": "Missingamount",
+            "type": "number"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "title": "ErrorResponse",
+        "type": "object",
+        "properties": {
+          "status": {
+            "title": "Status",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

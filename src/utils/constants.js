@@ -13,9 +13,19 @@ const status = {
 	stagePendingReviewer:'stage-pending-reviewer',
 	funding: 'funding',
 	inProgress: 'in-progress',
-	completed: 'completed'
+	completed: 'completed',
+	blocked: 'blocked',
+	unblocked: 'unblocked'
 };
+
+const titles = {
+	created: 'Proyecto creado',
+	updated: 'Proyecto actualizado',
+
+};
+
 module.exports = {
 	error: errorCodes,
-	status: status
+	status: status,
+	titles: titles
 };
