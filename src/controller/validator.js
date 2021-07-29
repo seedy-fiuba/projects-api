@@ -15,8 +15,8 @@ const createProject = (data) => {
 			y: Joi.number().required(),
 		}).required(),
 		hashtags: Joi.array().unique().items(Joi.string()).required(),
-		ownerId: Joi.number().greater(0),
-		reviewerId: Joi.number().greater(0),
+		ownerId: Joi.number().greater(0).required(),
+		reviewerId: Joi.number().greater(0).allow(null),
 		finishDate: Joi.date().greater('now').required()
 	});
 
