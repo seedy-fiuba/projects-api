@@ -154,12 +154,15 @@ describe('POST project', () => {
 			category: 'gamer',
 			mediaUrls: ['foto/fachera'],
 			status: 'created',
+			currentStageId: 0,
 			stages: [
 				{
+					id: 0,
 					track: 'armado',
 					targetAmount: 12.22
 				},
 				{
+					id: 1,
 					track: 'distribucion',
 					targetAmount: 125.22
 				}
@@ -225,7 +228,8 @@ describe('search projects', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		let queryValues = {
@@ -317,7 +321,8 @@ describe('search projects', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		let queryValues = {
@@ -380,7 +385,8 @@ describe('search projects', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		let hashtags = ['boquita', 'el', 'mas', 'grande'];
@@ -450,11 +456,12 @@ describe('search projects', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		let queryValues = {
-			status: 'pending',
+			status: 'pending-reviewer',
 		};
 
 		const finderMock = param => {
@@ -468,7 +475,7 @@ describe('search projects', () => {
 				fail('missing "$in" in operator in query');
 			}
 
-			if (query['status']['$in'] !== 'pending') {
+			if (query['status']['$in'] !== 'pending-reviewer') {
 				fail('unexpected value in status query ' + query['status']['$in']);
 			}
 

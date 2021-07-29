@@ -390,6 +390,7 @@ describe('PUT /api/project/{projectId}', () => {
 		projectMockRepository.getProjectByid.mockReturnValueOnce(oldProject);
 		projectMockRepository.updateProject.mockReturnValueOnce(projectUpdated);
 
+		jest.setTimeout(90 * 1000);
 		const res = await request.put('/api/project/456').set('X-Override-Token','true').send(body);
 
 		expect(projectMockRepository.getProjectByid.mock.calls.length).toBe(1);
