@@ -136,6 +136,7 @@ describe('POST /api/project', () => {
 				}
 			],
 			finishDate: tomorrow.toISOString(),
+			ownerId: 555,
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
@@ -223,6 +224,7 @@ describe('POST /api/project', () => {
 			],
 			reviewerId: 223,
 			finishDate: tomorrow.toISOString(),
+			ownerId: 555,
 			hashtags: ['gamer', 'rgb', 'mecanico']
 		};
 
@@ -677,6 +679,7 @@ describe('GET /api/project/search', () => {
 			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
+			status: 'pending-reviewer',
 			location: {
 				coordinates: [
 					-34.610955,
@@ -684,7 +687,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -722,7 +726,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -758,7 +763,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -809,7 +815,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc]);
@@ -846,7 +853,8 @@ describe('GET /api/project/search', () => {
 				],
 				type: 'Point'
 			},
-			hashtags: ['gamer', 'rgb', 'mecanico']
+			hashtags: ['gamer', 'rgb', 'mecanico'],
+			isBlocked: false
 		};
 
 		var projectDoc2 = JSON.parse(JSON.stringify(projectDoc));
@@ -882,7 +890,7 @@ describe('GET /api/project/search', () => {
 			mediaUrls: ['foto/fachera'],
 			targetAmount: 123.22,
 			fundedAmount: 0.0,
-			status: 'pending',
+			status: 'created',
 			location: {
 				coordinates: [
 					-34.610955,
@@ -902,13 +910,13 @@ describe('GET /api/project/search', () => {
 		projectMockRepository.searchProjects.mockReturnValueOnce([projectDoc, projectDoc2]);
 
 		const res = await request.get('/api/project/search').set('X-Override-Token','true').query({
-			status: 'pending',
+			status: 'created',
 			hashtags: 'gamer,rgb'
 		});
 
 		expect(projectMockRepository.searchProjects.mock.calls.length).toBe(1);
 		expect(projectMockRepository.searchProjects.mock.calls[0][0]).toMatchObject({
-			status: ['pending'],
+			status: ['created'],
 			hashtags: ['gamer', 'rgb']
 		});
 
